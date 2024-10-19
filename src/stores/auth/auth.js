@@ -1,0 +1,68 @@
+import { defineStore } from "pinia";
+import api from "@/api/api";
+import router from "@/router";
+
+export const authStore = defineStore("authStore", {
+    state: () => ({
+        user: null,
+        token: null
+    }),
+
+    getters: {
+        isAuthenticated: (state) => { !!state.user },
+        isAdmin: (state) => { state.user?.role ==='ADMIN' }
+    },
+
+    actions: {
+        setUser(user) {
+            this.user = user;
+            localStorage.setItem('user', user);
+        },
+        setToken(token) {
+            this.token = token;
+            localStorage.setItem('jwt', token);
+        },
+        logout() {
+            this.user = null;
+            this.token = null;
+            localStorage.removeItem('jwt');
+        },
+        async login(credentials) {
+            console.log(credentials)
+            try {
+                /*
+                    Login workflow:
+                    - Get the credentials from the login form
+                    - Send the "Login" request with the credentials
+                    * In back-end:
+                        ** Generate token with the credentials
+                        ** Validate the credentials from database and authenticate it
+                        ** Send the token to front-end
+                    - Get the token and save it to the local Storage
+                    - Get the loged in user and save to the local storage
+                    - Validate the roles and redirect to the determined url
+                 */
+                console.log(credentials);
+                const response = await api.post(`/auth/login`, credentials);
+        
+                const token = response.data;
+                this.setToken(token);
+
+                localStorage.removeItem('jwt');
+        
+                const userResponse = await api.get(`/auth/userAuthenticated`);
+                const user = userResponse.data;
+                this.setUser(user); 
+        
+                if (user['roles'][0]['roleName'] === 'ADMIN') {
+                    router.push('/admin');
+                }
+                else if (user['roles'][0]['roleName'] === 'USER') {
+                    router.push('/home');
+                }
+            } catch (error) {
+                console.error('Login failed:', error);
+            }
+        }        
+    },
+})  
