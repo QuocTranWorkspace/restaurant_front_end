@@ -8,7 +8,7 @@ const api = axios.create({
 // Interceptor to add the Authorization header to every request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('jwt');
+    const token = sessionStorage.getItem('jwt');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }

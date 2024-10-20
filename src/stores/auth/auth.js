@@ -27,14 +27,16 @@ export const authStore = defineStore("authStore", {
             this.token = null;
             sessionStorage.removeItem('jwt');
         },
-        async isUsernameAvaiable(username) {
-            try {
-                const response = await api.get(`auth/validateUsername`, username);
-
-                return response.data;
-            } catch (error) {
-                console.error('Username is not valid: ', error);
-            } 
+        async isUsernameAvaiable(credentials) {
+            // try {
+                // const response = await api.get(`auth/validateUsername`, credentials);
+                // console.log(response.data);
+                // this.$http.patch()
+                return true;
+            // } 
+            // catch (error) {
+            //     console.error('Username is not valid: ', error);
+            // } 
         },
         async login(credentials) {
             try {
@@ -59,7 +61,8 @@ export const authStore = defineStore("authStore", {
                 localStorage.removeItem('jwt');
         
                 const userResponse = await api.get(`/auth/userAuthenticated`);
-                const user = userResponse.data.data;
+                const user = userResponse.data;
+                console.log(user);
                 this.setUser(user); 
         
                 if (user['roles'][0]['roleName'] === 'ADMIN') {
@@ -68,6 +71,14 @@ export const authStore = defineStore("authStore", {
                 else if (user['roles'][0]['roleName'] === 'USER') {
                     router.push('/home');
                 }
+            } catch (error) {
+                console.error('Login failed: ', error);
+            }
+        },
+        async register(credentials) {
+            try {
+            const response = await api.post(`/auth/register`, credentials);
+            const userInfo = response.data.data;
             } catch (error) {
                 console.error('Login failed: ', error);
             }
