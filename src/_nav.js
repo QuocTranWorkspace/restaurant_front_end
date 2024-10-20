@@ -273,7 +273,7 @@ export default [
       {
         component: 'CNavItem',
         name: 'Register',
-        to: '/pages/register',
+        to: '/pages/auth/register',
       },
       {
         component: 'CNavItem',

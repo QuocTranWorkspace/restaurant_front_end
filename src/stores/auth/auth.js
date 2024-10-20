@@ -16,19 +16,27 @@ export const authStore = defineStore("authStore", {
     actions: {
         setUser(user) {
             this.user = user;
-            localStorage.setItem('user', user);
+            sessionStorage.setItem('user', user);
         },
         setToken(token) {
             this.token = token;
-            localStorage.setItem('jwt', token);
+            sessionStorage.setItem('jwt', token);
         },
         logout() {
             this.user = null;
             this.token = null;
-            localStorage.removeItem('jwt');
+            sessionStorage.removeItem('jwt');
+        },
+        async isUsernameAvaiable(username) {
+            try {
+                const response = await api.get(`auth/validateUsername`, username);
+
+                return response.data;
+            } catch (error) {
+                console.error('Username is not valid: ', error);
+            } 
         },
         async login(credentials) {
-            console.log(credentials)
             try {
                 /*
                     Login workflow:
@@ -42,16 +50,16 @@ export const authStore = defineStore("authStore", {
                     - Get the loged in user and save to the local storage
                     - Validate the roles and redirect to the determined url
                  */
-                console.log(credentials);
                 const response = await api.post(`/auth/login`, credentials);
         
-                const token = response.data;
+                const token = response.data.data;
+
                 this.setToken(token);
 
                 localStorage.removeItem('jwt');
         
                 const userResponse = await api.get(`/auth/userAuthenticated`);
-                const user = userResponse.data;
+                const user = userResponse.data.data;
                 this.setUser(user); 
         
                 if (user['roles'][0]['roleName'] === 'ADMIN') {
@@ -61,7 +69,7 @@ export const authStore = defineStore("authStore", {
                     router.push('/home');
                 }
             } catch (error) {
-                console.error('Login failed:', error);
+                console.error('Login failed: ', error);
             }
         }        
     },

@@ -5,18 +5,31 @@
           <CCol :md="9" :lg="7" :xl="6">
             <CCard class="mx-4">
               <CCardBody class="p-4">
-                <CForm>
+                <CForm @submit="handleRegister">
                   <h1>Register</h1>
                   <p class="text-body-secondary">Create your account</p>
                   <CInputGroup class="mb-3">
                     <CInputGroupText>
                       <CIcon icon="cil-user" />
                     </CInputGroupText>
-                    <CFormInput placeholder="Username" autocomplete="username" />
+                    <CFormInput placeholder="Username" autocomplete="username" v-model="credentials.username" @input="validateRegister.validateUsername"/>
+                    <template v-if="validateRegister.validateUsername" #text>Username is not Valid</template>
+                  </CInputGroup>
+                  <CInputGroup class="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon="cil-user" />
+                    </CInputGroupText>
+                    <CFormInput placeholder="Firstname" autocomplete="firstname" v-model="credentials.firstname" />
+                    <CInputGroupText>
+                      <CIcon icon="cil-user" />
+                    </CInputGroupText>
+                    <CFormInput placeholder="Lastname" autocomplete="lastname" v-model="credentials.lastname" />
                   </CInputGroup>
                   <CInputGroup class="mb-3">
                     <CInputGroupText>@</CInputGroupText>
-                    <CFormInput placeholder="Email" autocomplete="email" />
+                    <CFormInput placeholder="Email" autocomplete="email" v-model="credentials.email" @input="validateRegister.validateEmail" />
+                    <template v-if="validateRegister.validateEmail" #text>Email must contains @</template>
+                    <CFormText as="span" @change="!validateRegister.validateEmail">Must be 8-20 characters long.</CFormText>
                   </CInputGroup>
                   <CInputGroup class="mb-3">
                     <CInputGroupText>
@@ -26,7 +39,9 @@
                       type="password"
                       placeholder="Password"
                       autocomplete="new-password"
+                      v-model="credentials.password"
                     />
+                    <template v-if="validateRegister.validatePassword" #text>Email must contains uppercase, lowercase, digit or #$!%*?& and more than 8 letter</template>
                   </CInputGroup>
                   <CInputGroup class="mb-4">
                     <CInputGroupText>
@@ -36,7 +51,9 @@
                       type="password"
                       placeholder="Repeat password"
                       autocomplete="new-password"
+                      v-model="validateRegister.repeatPassword"
                     />
+                    <template v-if="validateRegister.validateRepeatPassword" #text>Does not match</template>
                   </CInputGroup>
                   <div class="d-grid">
                     <CButton color="success">Create Account</CButton>
@@ -61,14 +78,38 @@
 
       const credentials = reactive({
         username: '',
-        password: ''
+        password: '',
+        firstname: '',
+        lastname: '',
+        email: ''
+      });
+
+      const validateRegister = reactive({
+        repeatPassword: '',
+        validateUsername: () => {
+          return !authStoreLogin.isUsernameAvaiable(credentials.username);
+        },
+        validatePassword: () => {
+          const pwdFilter = /^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*[\d|@#$!%*?&])[\p{L}\d@#$!%*?&]{8,96}$/gmu
+          return !pwdFilter.test(credentials.password);
+        },
+        validateEmail: () => {
+          var emailFilter = /\S+@\S+\.\S+/;
+          return emailFilter.test(credentials.email);
+        },
+        validateRepeatPassword: () => {
+          return credentials.password === validateRegister.repeatPassword;
+        }
       });
   
-      const handleLogin = () => {
-        authStoreLogin.login(credentials);
+      const handleRegister = () => {
+        if (validateRegister.validateUsername && validateRegister.validatePassword
+        && validateRegister.validateRepeatPassword && validateRegister.validateEmail) {
+          authStoreLogin.login(credentials);
+        }
       };
   
-      return { credentials, handleLogin };
+      return { credentials, validateRegister, handleRegister };
     }
   };
   
