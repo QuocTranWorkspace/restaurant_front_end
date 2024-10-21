@@ -94,7 +94,7 @@
 <script setup>
 import { authStore } from "@/stores/auth/auth";
 import { ref, reactive } from "vue";
-const authStoreLogin = authStore();
+const authStoreRegister = authStore();
 
 const validateForm = ref();
 const credentials = reactive({
@@ -116,10 +116,14 @@ const validateField = (field, event) => {
   errors[field] = "";
   // Validate username
   if (field === "username") {
-    if (!authStoreLogin.isUsernameAvaiable(credentials)) {
-      errors[field] = `Username: ${credentials[field]} has already existed`;
-    }
+    authStoreRegister.isUsernameAvaiable(event.target.value).then((value) => {
+      if (!value) {
+        errors[field] = `Username: "${credentials[field]}" has already existed`;
+        event.target.setCustomValidity(errors[field]);
+      }
+    });
   }
+  console.log(errors[field]);
 
   if (field === "password") {
     const pwdFilter = /^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*[\d|@#$!%*?&])[\p{L}\d@#$!%*?&]{8,96}$/gmu;
@@ -140,7 +144,6 @@ const validateField = (field, event) => {
       errors[field] = `Email must follows: Example@example.sth`;
     }
   }
-
   event.target.setCustomValidity(errors[field]);
 };
 
@@ -149,6 +152,9 @@ const handleRegister = (event) => {
   if (form.checkValidity() === false) {
     event.preventDefault();
     event.stopPropagation();
+  } else {
+    event.preventDefault();
+    authStoreRegister.register(credentials);
   }
   validateForm.value = true;
 };

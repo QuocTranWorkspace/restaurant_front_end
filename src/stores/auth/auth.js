@@ -27,16 +27,14 @@ export const authStore = defineStore("authStore", {
             this.token = null;
             sessionStorage.removeItem('jwt');
         },
-        async isUsernameAvaiable(credentials) {
-            // try {
-                // const response = await api.get(`auth/validateUsername`, credentials);
-                // console.log(response.data);
-                // this.$http.patch()
-                return true;
-            // } 
-            // catch (error) {
-            //     console.error('Username is not valid: ', error);
-            // } 
+        async isUsernameAvaiable(username) {
+            try {
+                const response = await api.get(`auth/validateUsername/${username}`);
+                return response.data.data;
+            } 
+            catch (error) {
+                console.error('Username is not valid: ', error);
+            } 
         },
         async login(credentials) {
             try {
