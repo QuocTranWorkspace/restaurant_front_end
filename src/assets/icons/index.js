@@ -26,6 +26,7 @@ import {
 } from '@coreui/icons'
 import { cifUs, cifBr, cifIn, cifFr, cifEs, cifPl } from '@coreui/icons'
 import {
+  cilApple,
   cilArrowBottom,
   cilArrowRight,
   cilArrowTop,
@@ -52,6 +53,7 @@ import {
   cilGlobeAlt,
   cilGrid,
   cilFile,
+  cilFingerprint,
   cilJustifyCenter,
   cilLaptop,
   cilLayers,
@@ -84,6 +86,7 @@ import {
 export const iconsSet = Object.assign(
   {},
   {
+    cilApple,
     cilArrowBottom,
     cilArrowRight,
     cilArrowTop,
@@ -110,6 +113,7 @@ export const iconsSet = Object.assign(
     cilGlobeAlt,
     cilGrid,
     cilFile,
+    cilFingerprint,
     cilJustifyCenter,
     cilLaptop,
     cilLayers,

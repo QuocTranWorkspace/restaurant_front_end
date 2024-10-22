@@ -2,7 +2,7 @@ export default [
   {
     component: 'CNavItem',
     name: 'Dashboard',
-    to: '/dashboard',
+    to: '/admin/dashboard',
     icon: 'cil-speedometer',
     badge: {
       color: 'primary',
@@ -11,7 +11,76 @@ export default [
   },
   {
     component: 'CNavTitle',
-    name: 'Theme',
+    name: 'User',
+  },
+  {
+    component: 'CNavItem',
+    name: 'User Management',
+    to: '/admin/user',
+    icon: 'cil-fingerprint',
+    items: [
+      {
+        component: 'CNavItem',
+        name: 'Management',
+        to: '/admin/user/management',
+      },
+      {
+        component: 'CNavItem',
+        name: 'Role',
+        to: '/admin/user/role',
+      },
+      {
+        component: 'CNavItem',
+        name: 'Register',
+        to: '/admin/user/register',
+      },
+    ]
+  },
+  {
+    component: 'CNavTitle',
+    name: 'Product',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Product Management',
+    to: '/admin/product',
+    icon: 'cil-apple',
+    items: [
+      {
+        component: "CNavItem",
+        name: 'Management',
+        to: '/admin/product/management',
+      },
+      {
+        component: 'CNavItem',
+        name: 'Add product',
+        to: '/admin/product/add',
+      }
+    ]
+  },
+  {
+    component: 'CNavTitle',
+    name: 'Order',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Order Management',
+    to: '/admin/order',
+    icon: 'cil-basket',
+    items: [
+      {
+        component: 'CNavItem',
+        name: 'Management',
+        to: '/admin/order/management',
+        icon: ''
+      },
+      {
+        component: 'CNavItem',
+        name: 'Order Product',
+        to: '/admin/order/orderProduct',
+        icon: ''
+      }
+    ]
   },
   {
     component: 'CNavItem',
@@ -268,7 +337,7 @@ export default [
       {
         component: 'CNavItem',
         name: 'Login',
-        to: 'pages/auth/login',
+        to: '/pages/auth/login',
       },
       {
         component: 'CNavItem',

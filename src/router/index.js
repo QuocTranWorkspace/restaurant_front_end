@@ -8,10 +8,10 @@ const routes = [
     path: '/',
     name: 'Home',
     component: DefaultLayout,
-    redirect: '/dashboard',
+    redirect: '/admin/dashboard',
     children: [
       {
-        path: '/dashboard',
+        path: '/admin/dashboard',
         name: 'Dashboard',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -292,6 +292,116 @@ const routes = [
         path: '500',
         name: 'Page500',
         component: () => import('@/views/pages/Page500.vue'),
+      },
+      {
+        path: 'auth/login',
+        name: 'Login',
+        component: () => import('@/views/auth/Login.vue'),
+      },
+      {
+        path: 'auth/register',
+        name: 'Register',
+        component: () => import('@/views/auth/Register.vue'),
+      },
+    ],
+  },
+  {
+    path: '/admin',
+    redirect: '/admin/dashboard',
+    name: 'Restaurant Admin',
+    component: DefaultLayout,
+    children: [
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/pages/Page404.vue'),
+      },
+      {
+        path: '/user',
+        name: 'User Management',
+        component: {
+          render() {
+            return h(resolveComponent('router-view'))
+          }
+        },
+        children: [
+          {
+            path: '/user/management',
+            name: 'Management',
+            component: () => import('@/views/pages/Page404.vue'),
+          },
+          {
+            path: '/user/role',
+            name: 'Role',
+            render() {
+              return h(resolveComponent('router-view'))
+            },
+            children: [
+              {
+                path: '/user/role',
+                name: 'Role',
+                component: () => import('@/views/pages/Page404.vue'),
+              }
+            ]
+          },
+          {
+            path: '/user/register',
+            name: 'Admin Register',
+            component: () => import('@/views/pages/Page404.vue'),
+          },
+          {
+            path: 'user/:id',
+            name: 'User Detail',
+            component: () => import('@/views/pages/Page404.vue'),
+          }
+        ]
+      },
+      {
+        path: '/product',
+        name: 'Product Management',
+        component: {
+          render() {
+            return h(resolveComponent('router-view'))
+          }
+        },
+        children: [
+          {
+            path: '/product/management',
+            name: 'Management',
+            component: () => import('@/views/pages/Page404.vue'),
+          },
+          {
+            path: '/product/addproduct',
+            name: 'Add Product',
+            component: () => import('@/views/pages/Page404.vue'),
+          },
+          {
+            path: '/product/:id',
+            name: 'Product Detail',
+            component: () => import('@/views/pages/Page404.vue'),
+          },
+        ]
+      },
+      {
+        path: '/order',
+        name: 'Order Management',
+        component: {
+          render() {
+            return h(resolveComponent('router-view'))
+          }
+        },
+        children: [
+          {
+            path: '/order/management',
+            name: 'Management',
+            component: () => import('@/views/pages/Page404.vue'),
+          },
+          {
+            path: '/order/:id',
+            name: 'Order Detail',
+            component: () => import('@/views/pages/Page404.vue'),
+          },
+        ]
       },
       {
         path: 'auth/login',

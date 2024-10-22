@@ -1,12 +1,12 @@
 <script setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink } from "vue-router";
 
-import { logo } from '@/assets/brand/logo'
-import { sygnet } from '@/assets/brand/sygnet'
-import { AppSidebarNav } from '@/components/AppSidebarNav.js'
-import { useSidebarStore } from '@/stores/sidebar.js'
+import { logo } from "@/assets/brand/logo";
+import { sygnet } from "@/assets/brand/sygnet";
+import { AppSidebarNav } from "@/components/AppSidebarNav.js";
+import { useSidebarStore } from "@/stores/sidebar.js";
 
-const sidebar = useSidebarStore()
+const sidebar = useSidebarStore();
 </script>
 
 <template>
