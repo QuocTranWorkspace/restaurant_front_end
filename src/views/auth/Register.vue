@@ -1,6 +1,36 @@
 <template>
   <div class="bwrapper min-vh-100 d-flex flex-row align-items-center">
     <CContainer>
+      <CModal
+        alignment="center"
+        :visible="successModal"
+        @close="
+          () => {
+            successModal = false;
+          }
+        "
+      >
+        <CModalHeader>
+          <CModalTitle>Register Successfull</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          Register successful, now you can
+          <CLink href="http://localhost:3000/#/login">login</CLink>
+          with this Account
+        </CModalBody>
+        <CModalFooter>
+          <CButton
+            color="secondary"
+            @click="
+              () => {
+                successModal = false;
+              }
+            "
+            >Close</CButton
+          >
+          <CButton color="primary" @click="redirectLogin">Log in</CButton>
+        </CModalFooter>
+      </CModal>
       <CRow class="justify-content-center">
         <CCol :md="9" :lg="7" :xl="6">
           <CCard class="mx-4">
@@ -94,8 +124,10 @@
 <script setup>
 import { authStore } from "@/stores/auth/auth";
 import { ref, reactive } from "vue";
+import router from "../../router";
 const authStoreRegister = authStore();
 
+const successModal = ref(false);
 const validateForm = ref();
 const credentials = reactive({
   username: "",
@@ -147,6 +179,10 @@ const validateField = (field, event) => {
   event.target.setCustomValidity(errors[field]);
 };
 
+const redirectLogin = () => {
+  router.push("/login");
+};
+
 const handleRegister = (event) => {
   const form = event.currentTarget;
   if (form.checkValidity() === false) {
@@ -155,6 +191,7 @@ const handleRegister = (event) => {
   } else {
     event.preventDefault();
     authStoreRegister.register(credentials);
+    successModal.value = true;
   }
   validateForm.value = true;
 };
