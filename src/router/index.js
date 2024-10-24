@@ -3,14 +3,6 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 import DefaultLayout from '@/layouts/admin/DefaultLayout'
 
-const isAuthenticated = () => {
-  return !!sessionStorage.getItem('token')
-}
-
-const isAdmin = () => {
-  return sessionStorage.getItem('user')['roles'][0]['roleName'] === 'ADMIN'
-}
-
 const routes = [
   {
     path: '/',
@@ -30,7 +22,7 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () =>
           import(
-            /* webpackChunkName: "dashboard" */ '@/views/dashboard/Dashboard.vue'
+            /* webpackChunkName: "dashboard" */ '@/views/admin/Dashboard.vue'
           ),
       },
       {
@@ -70,12 +62,12 @@ const routes = [
   {
     path: '/404',
     name: 'Forbidden',
-    component: () => import('@/views/pages/Page404.vue'),
+    component: () => import('@/views/error/Page404.vue'),
   },
   {
     path: '/500',
     name: 'Internal Error',
-    component: () => import('@/views/pages/Page500.vue'),
+    component: () => import('@/views/error/Page500.vue'),
   },
   {
     path: '/admin',
@@ -87,7 +79,7 @@ const routes = [
         path: '/admin/dashboard',
         name: 'Dashboard',
         component: () => import(
-          /* webpackChunkName: "dashboard" */ '@/views/dashboard/Dashboard.vue'
+          /* webpackChunkName: "dashboard" */ '@/views/admin/Dashboard.vue'
         ),
       },
       {
@@ -102,22 +94,22 @@ const routes = [
           {
             path: '/admin/user/management',
             name: 'Management',
-            component: () => import('@/views/pages/Page404.vue'),
+            component: () => import('@/views/error/Page404.vue'),
           },
           {
             path: '/admin/user/role',
             name: 'Role',
-            component: () => import('@/views/pages/Page404.vue'),
+            component: () => import('@/views/error/Page404.vue'),
           },
           {
             path: '/admin/user/register',
             name: 'Admin Register',
-            component: () => import('@/views/pages/Page404.vue'),
+            component: () => import('@/views/error/Page404.vue'),
           },
           {
             path: '/admin/user/:id',
             name: 'User Detail',
-            component: () => import('@/views/pages/Page404.vue'),
+            component: () => import('@/views/error/Page404.vue'),
           }
         ]
       },
@@ -133,17 +125,17 @@ const routes = [
           {
             path: '/admin/product/management',
             name: 'Management',
-            component: () => import('@/views/pages/Page404.vue'),
+            component: () => import('@/views/error/Page404.vue'),
           },
           {
             path: '/admin/product/addproduct',
             name: 'Add Product',
-            component: () => import('@/views/pages/Page404.vue'),
+            component: () => import('@/views/error/Page404.vue'),
           },
           {
             path: '/admin/product/:id',
             name: 'Product Detail',
-            component: () => import('@/views/pages/Page404.vue'),
+            component: () => import('@/views/error/Page404.vue'),
           },
         ]
       },
@@ -159,26 +151,16 @@ const routes = [
           {
             path: '/admin/order/management',
             name: 'Management',
-            component: () => import('@/views/pages/Page404.vue'),
+            component: () => import('@/views/admin/OrderManagement.vue'),
           },
           {
             path: '/admin/order/:id',
             name: 'Order Detail',
-            component: () => import('@/views/pages/Page404.vue'),
+            component: () => import('@/views/error/Page404.vue'),
           },
         ]
       },
     ],
-    beforeEnter: (to, from, next) => {
-      if (isAuthenticated() && isAdmin()) {
-        next();
-      }
-      else {
-        next({
-          path: '/login'
-        })
-      }
-    }
   },
 ]
 
@@ -190,5 +172,18 @@ const router = createRouter({
     return { top: 0 }
   },
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.path.startsWith('/admin')) {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    if (!!user && user['roles'][0] === 'ADMIN') {
+      next();
+    } else {
+      next({ path: '/login' });
+    }
+  } else {
+    next();
+  }
+});
 
 export default router

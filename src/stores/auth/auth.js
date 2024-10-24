@@ -16,7 +16,7 @@ export const authStore = defineStore("authStore", {
     actions: {
         setUser(user) {
             this.user = user;
-            sessionStorage.setItem('user', user);
+            sessionStorage.setItem('user', JSON.stringify(user));
         },
         setToken(token) {
             this.token = token;
@@ -60,13 +60,12 @@ export const authStore = defineStore("authStore", {
         
                 const userResponse = await api.get(`/auth/userAuthenticated`);
                 const user = userResponse.data;
-                console.log(user);
                 this.setUser(user); 
         
-                if (user['roles'][0]['roleName'] === 'ADMIN') {
+                if (this.user['roles'][0] === 'ADMIN') {
                     router.push('/admin');
                 }
-                else if (user['roles'][0]['roleName'] === 'USER') {
+                else if (this.user['roles'] === 'USER') {
                     router.push('/home');
                 }
             } catch (error) {
