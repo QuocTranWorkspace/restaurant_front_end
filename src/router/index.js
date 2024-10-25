@@ -123,20 +123,15 @@ const routes = [
         },
         children: [
           {
-            path: '/admin/product/management',
-            name: 'Management',
-            component: () => import('@/views/error/Page404.vue'),
-          },
-          {
             path: '/admin/product/addproduct',
             name: 'Add Product',
             component: () => import('@/views/error/Page404.vue'),
           },
           {
-            path: '/admin/product/:id',
-            name: 'Product Detail',
-            component: () => import('@/views/error/Page404.vue'),
-          },
+            path: '/admin/product/management',
+            name: 'Product',
+            component: () => import('@/views/admin/ProductManagement.vue'),
+          }
         ]
       },
       {
@@ -147,6 +142,7 @@ const routes = [
             return h(resolveComponent('router-view'))
           }
         },
+        redirect: '/admin/order/management',
         children: [
           {
             path: '/admin/order/management',
@@ -174,15 +170,34 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.path.startsWith('/admin')) {
-    const user = JSON.parse(sessionStorage.getItem('user'));
-    if (!!user && user['roles'][0] === 'ADMIN') {
-      next();
+  try {
+    if (to.path.startsWith('/admin') || to.path.includes('/check-out')) {
+      const userData = sessionStorage.getItem('user');
+      
+      // Check if user data exists and is valid JSON
+      if (!userData) {
+        throw new Error('No user data found');
+      }
+
+      const user = JSON.parse(userData);
+      
+      // Ensure roles exist and the user has admin privileges
+      if (user.roles && user.roles.includes('ADMIN')) {
+        next(); // Allow access
+      } else {
+        throw new Error('Unauthorized access');
+      }
     } else {
-      next({ path: '/login' });
+      next(); // Public routes, proceed without checks
     }
-  } else {
-    next();
+  } catch (error) {
+    console.error(`Routing error: ${error.message}`);
+
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('jwt');
+    
+    // Redirect to login page on any error
+    next({ path: '/login', query: { error: 'access_denied' } });
   }
 });
 

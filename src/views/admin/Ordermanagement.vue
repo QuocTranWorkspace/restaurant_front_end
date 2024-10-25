@@ -33,19 +33,18 @@
     >
       <template #head>
         <tr>
-          <th>#</th>
+          <th class="col-0">#</th>
           <th>Code</th>
           <VTh sortKey="totalPrice">Total Price</VTh>
           <th>Customer</th>
           <th>Address</th>
           <th class="text-center col-2">Actions</th>
-          <!-- Adjusted width -->
         </tr>
       </template>
 
       <template #body="{ rows }">
         <tr v-for="row in rows" :key="row.guid">
-          <td>{{ row.id }}</td>
+          <td class="col-0">{{ row.id }}</td>
           <td>{{ row.code }}</td>
           <td>{{ row.totalPrice }}</td>
           <td>{{ row.customerName }}</td>

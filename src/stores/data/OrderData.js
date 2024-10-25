@@ -1,7 +1,7 @@
 import api from "@/api/api"
 import { defineStore } from "pinia";
 
-export const ordersStore = defineStore("Order Store", {
+export const ordersStore = defineStore("orderStore", {
     state: () => ({
         orders: null,
     }),
@@ -17,7 +17,6 @@ export const ordersStore = defineStore("Order Store", {
         async fetchOrders() {
             try {
                 const response = await api.get(`/order/orderList`);
-                // console.log(response.data.data)
                 this.setOrders(response.data.data);
             } catch (error) {
                 console.log(error);
