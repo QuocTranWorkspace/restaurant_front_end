@@ -17,8 +17,8 @@ export const ordersStore = defineStore("Order Store", {
         async fetchOrders() {
             try {
                 const response = await api.get(`/order/orderList`);
-                console.log(response.data.data);
-                this.setOrders(response.data);
+                // console.log(response.data.data)
+                this.setOrders(response.data.data);
             } catch (error) {
                 console.log(error);
             }
