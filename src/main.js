@@ -10,7 +10,13 @@ import { iconsSet as icons } from '@/assets/icons'
 
 import SmartTable from 'vuejs-smart-table'
 
-const app = createApp(App)
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faInfo, faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons'
+
+library.add(faInfo, faPenToSquare, faTrashCan)
+
+const app = createApp(App).component('font-awesome-icon', FontAwesomeIcon)
 app.use(createPinia())
 app.use(router)
 app.use(CoreuiVue)
