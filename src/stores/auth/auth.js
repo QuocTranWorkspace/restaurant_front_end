@@ -55,9 +55,7 @@ export const authStore = defineStore("authStore", {
                 const token = response.data.data;
 
                 this.setToken(token);
-
-                localStorage.removeItem('jwt');
-        
+                        
                 const userResponse = await api.get(`/auth/userAuthenticated`);
                 const user = userResponse.data;
                 this.setUser(user); 

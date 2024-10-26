@@ -76,7 +76,7 @@ const routes = [
     redirect: '/admin/dashboard',
     children: [
       {
-        path: '/admin/dashboard',
+        path: 'dashboard',
         name: 'Dashboard',
         component: () => import(
           /* webpackChunkName: "dashboard" */ '@/views/admin/Dashboard.vue'
@@ -92,25 +92,20 @@ const routes = [
         },
         children: [
           {
-            path: '/admin/user/management',
-            name: 'Management',
-            component: () => import('@/views/error/Page404.vue'),
+            path: 'management',
+            name: 'Management U',
+            component: () => import('@/views/admin/UserManagement.vue'),
           },
           {
-            path: '/admin/user/role',
+            path: 'role',
             name: 'Role',
             component: () => import('@/views/error/Page404.vue'),
           },
           {
-            path: '/admin/user/register',
+            path: 'register',
             name: 'Admin Register',
             component: () => import('@/views/error/Page404.vue'),
           },
-          {
-            path: '/admin/user/:id',
-            name: 'User Detail',
-            component: () => import('@/views/error/Page404.vue'),
-          }
         ]
       },
       {
@@ -123,13 +118,13 @@ const routes = [
         },
         children: [
           {
-            path: '/admin/product/addproduct',
+            path: 'addproduct',
             name: 'Add Product',
             component: () => import('@/views/error/Page404.vue'),
           },
           {
-            path: '/admin/product/management',
-            name: 'Product',
+            path: 'management',
+            name: 'Management P',
             component: () => import('@/views/admin/ProductManagement.vue'),
           }
         ]
@@ -146,7 +141,7 @@ const routes = [
         children: [
           {
             path: '/admin/order/management',
-            name: 'Management',
+            name: 'Management O',
             component: () => import('@/views/admin/OrderManagement.vue'),
           },
           {

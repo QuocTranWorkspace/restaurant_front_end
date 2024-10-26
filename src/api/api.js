@@ -39,8 +39,8 @@ api.interceptors.response.use(
 
       // Handle other status codes
       if (status === 403 || status === 401) {
+        alert(`Username or password incorrect`);  
         console.warn('Unauthorized. Redirecting to login...');
-        router.push('/login')
       } else {
         console.error(`Error ${status}: ${data.message || 'Unknown error'}`);
       }

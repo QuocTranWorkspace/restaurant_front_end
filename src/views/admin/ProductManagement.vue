@@ -2,23 +2,23 @@
   <div class="container mt-5">
     <div class="d-flex flex-row-reverse mb-3">
       <div class="ps-2">
-        <label for="nameFilter" class="form-label">Filter by Code:</label>
-        <input
-          id="nameFilter"
-          type="text"
-          class="form-control"
-          v-model="filters.name.value"
-          placeholder="Enter Order code"
-        />
-      </div>
-      <div>
         <label for="nameFilter" class="form-label">Filter by Name:</label>
         <input
           id="nameFilter"
           type="text"
           class="form-control"
-          v-model="filters.code.value"
-          placeholder="Enter customer name"
+          v-model="filters.name.value"
+          placeholder="Enter product name"
+        />
+      </div>
+      <div>
+        <label for="nameFilter" class="form-label">Filter by Category:</label>
+        <input
+          id="nameFilter"
+          type="text"
+          class="form-control"
+          v-model="filters.category.value"
+          placeholder="Enter category"
         />
       </div>
     </div>
@@ -48,7 +48,7 @@
           <td>{{ row.productName }}</td>
           <td>{{ row.originalPrice }}</td>
           <td>{{ row.salePrice }}</td>
-          <td>{{ row.category }}</td>
+          <td>{{ row.category.categoryName }}</td>
           <td class="d-flex justify-content-evenly">
             <div class="d-flex align-items-center justify-content-center gap-2">
               <CButton
@@ -102,7 +102,7 @@ productStoreInit.fetchProducts().then(() => {
 });
 
 const filters = reactive({
-  name: { value: "", keys: ["customerName"] },
-  code: { value: "", keys: ["code"] },
+  name: { value: "", keys: ["name"] },
+  category: { value: "", keys: ["category.categoryName"] },
 });
 </script>
