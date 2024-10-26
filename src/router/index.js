@@ -99,7 +99,7 @@ const routes = [
           {
             path: 'role',
             name: 'Role',
-            component: () => import('@/views/error/Page404.vue'),
+            component: () => import('@/views/admin/RoleManagement.vue'),
           },
           {
             path: 'register',
