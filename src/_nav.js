@@ -28,11 +28,18 @@ export default [
         component: 'CNavItem',
         name: 'Role',
         to: '/admin/user/role',
+        items: [
+          {
+            component: 'CNavItem',
+            name: 'Modify role',
+            to: '/admin/user/role/:id',
+          },
+        ]
       },
       {
         component: 'CNavItem',
-        name: 'Register',
-        to: '/admin/user/register',
+        name: 'User detail',
+        to: '/admin/user/:id',
       },
     ]
   },
@@ -54,7 +61,7 @@ export default [
       {
         component: 'CNavItem',
         name: 'Add product',
-        to: '/admin/product/add',
+        to: '/admin/product/addProduct',
       }
     ]
   },

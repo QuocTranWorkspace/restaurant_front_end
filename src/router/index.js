@@ -76,7 +76,7 @@ const routes = [
     redirect: '/admin/dashboard',
     children: [
       {
-        path: 'dashboard',
+        path: '/admin/dashboard',
         name: 'Dashboard',
         component: () => import(
           /* webpackChunkName: "dashboard" */ '@/views/admin/Dashboard.vue'
@@ -92,20 +92,30 @@ const routes = [
         },
         children: [
           {
-            path: 'management',
+            path: '/admin/user/management',
             name: 'Management U',
             component: () => import('@/views/admin/UserManagement.vue'),
           },
           {
-            path: 'role',
+            path: '/admin/user/role',
             name: 'Role',
             component: () => import('@/views/admin/RoleManagement.vue'),
           },
           {
-            path: 'register',
+            path: '/admin/user/role/:id',
+            name: 'Role Detail',
+            component: () => import('@/views/admin/RoleModify.vue'),
+          },
+          {
+            path: '/admin/user/register',
             name: 'Admin Register',
             component: () => import('@/views/error/Page404.vue'),
           },
+          {
+            path: '/admin/user/:id',
+            name: 'Admin Detail',
+            component: () => import('@/views/admin/UserModify.vue'),
+          }
         ]
       },
       {
@@ -118,15 +128,15 @@ const routes = [
         },
         children: [
           {
-            path: 'addproduct',
+            path: '/admin/product/:id',
             name: 'Add Product',
-            component: () => import('@/views/error/Page404.vue'),
+            component: () => import('@/views/admin/ProductModify.vue'),
           },
           {
-            path: 'management',
+            path: '/admin/product/management',
             name: 'Management P',
             component: () => import('@/views/admin/ProductManagement.vue'),
-          }
+          },
         ]
       },
       {
@@ -147,7 +157,7 @@ const routes = [
           {
             path: '/admin/order/:id',
             name: 'Order Detail',
-            component: () => import('@/views/error/Page404.vue'),
+            component: () => import('@/views/admin/OrderModify.vue'),
           },
         ]
       },
