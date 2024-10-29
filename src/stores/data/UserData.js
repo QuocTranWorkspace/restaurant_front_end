@@ -31,7 +31,6 @@ export const userStore = defineStore("userStore", {
             try {
                 const response = await api.get(`user/roleList`);
                 this.setRoles(response.data.data);
-                console.log(response.data.data)
             } catch (error) {
                 console.log(error);
             }

@@ -7,24 +7,14 @@
           id="nameFilter"
           type="text"
           class="form-control"
-          v-model="filters.fullname.value"
-          placeholder="Enter Name"
-        />
-      </div>
-      <div>
-        <label for="nameFilter" class="form-label">Filter by Email:</label>
-        <input
-          id="nameFilter"
-          type="text"
-          class="form-control"
-          v-model="filters.email.value"
-          placeholder="Enter customer email"
+          v-model="filters.category.value"
+          placeholder="Enter product name"
         />
       </div>
     </div>
 
     <VTable
-      :data="userList"
+      :data="categoryList"
       :filters="filters"
       class="table table-hover table-bordered"
       :currentPage="currentPage"
@@ -34,23 +24,17 @@
       <template #head>
         <tr>
           <th class="col-0">#</th>
-          <th>Username</th>
-          <th>Full name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Address</th>
+          <th>Name</th>
+          <th>Description</th>
           <th class="text-center col-2">Actions</th>
         </tr>
       </template>
 
       <template #body="{ rows }">
         <tr v-for="row in rows" :key="row.guid">
-          <td>{{ row.id }}</td>
-          <td>{{ row.userName }}</td>
-          <td>{{ row.firstName + " " + row.lastName }}</td>
-          <td>{{ row.email }}</td>
-          <td>{{ row.phone }}</td>
-          <td>{{ row.address }}</td>
+          <td class="col-0">{{ row.id }}</td>
+          <td>{{ row.categoryName }}</td>
+          <td>{{ row.categoryDescription }}</td>
           <td class="d-flex justify-content-evenly">
             <div class="d-flex align-items-center justify-content-center gap-2">
               <CButton
@@ -90,21 +74,20 @@
 </template>
 
 <script setup>
-import { userStore } from "@/stores/data/UserData";
+import { productStore } from "@/stores/data/ProductData";
 import { reactive, ref } from "vue";
 
-const userStoreInit = userStore();
+const productStoreInit = productStore();
 
 const currentPage = ref(1);
 const totalPages = ref(100);
 
-let userList = ref([]);
-userStoreInit.fetchUsers().then(() => {
-  userList.value = userStoreInit.getUsers;
+let categoryList = ref([]);
+productStoreInit.fetchCategories().then(() => {
+  categoryList.value = productStoreInit.getCategories.filter((data) => data.status);
 });
 
 const filters = reactive({
-  fullname: { value: "", keys: ["firstName", "lastName"] },
-  email: { value: "", keys: ["email"] },
+  category: { value: "", keys: ["categoryName"] },
 });
 </script>

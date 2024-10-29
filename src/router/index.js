@@ -131,6 +131,28 @@ const routes = [
         ]
       },
       {
+        path: '/admin/category',
+        name: 'Category Management',
+        component: {
+          render() {
+            return h(resolveComponent('router-view'))
+          }
+        },
+        redirect: "/admin/category/management",
+        children: [
+          {
+            path: '/admin/category/management',
+            name: 'Category M',
+            component: () => import('@/views/admin/CategoryManagement.vue'),
+          },
+          {
+            path: '/admin/category/:id',
+            name: 'Category Modify',
+            component: () => import('@/views/admin/CategoryModify.vue'),
+          },
+        ]
+      },
+      {
         path: '/admin/product',
         name: 'Product Management',
         component: {
