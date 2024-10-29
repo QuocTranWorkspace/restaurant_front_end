@@ -25,7 +25,8 @@
       <CFormInput type="text" id="salePrice" placeholder="199$" />
     </CCol>
     <CCol xs="12">
-      <CFormSelect aria-label="Default select example">
+      <CFormLabel for="category">Category</CFormLabel>
+      <CFormSelect aria-label="Default select example" id="category">
         <option>Open this select menu</option>
         <option value="1">One</option>
         <option value="2">Two</option>

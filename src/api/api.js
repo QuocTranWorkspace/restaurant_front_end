@@ -31,7 +31,7 @@ api.interceptors.response.use(
 
       // If network error occurs (like expired token), redirect to login
       if (error.message.includes('Network Error')) {
-        alert('Session expired. Please log in again.');
+        alert(error.message);
         router.push('/login')
       }
     } else {

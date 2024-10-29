@@ -97,16 +97,6 @@ const routes = [
             component: () => import('@/views/admin/UserManagement.vue'),
           },
           {
-            path: '/admin/user/role',
-            name: 'Role',
-            component: () => import('@/views/admin/RoleManagement.vue'),
-          },
-          {
-            path: '/admin/user/role/:id',
-            name: 'Role Detail',
-            component: () => import('@/views/admin/RoleModify.vue'),
-          },
-          {
             path: '/admin/user/register',
             name: 'Admin Register',
             component: () => import('@/views/error/Page404.vue'),
@@ -116,6 +106,28 @@ const routes = [
             name: 'Admin Detail',
             component: () => import('@/views/admin/UserModify.vue'),
           }
+        ]
+      },
+      {
+        path: '/admin/role',
+        name: 'Role Management',
+        component: {
+          render() {
+            return h(resolveComponent('router-view'))
+          }
+        },
+        redirect: '/admin/role/management',
+        children: [
+          {
+            path: '/admin/role/management',
+            name: 'Role M',
+            component: () => import('@/views/admin/RoleManagement.vue'),
+          },
+          {
+            path: '/admin/role/:id',
+            name: 'Role Detail',
+            component: () => import('@/views/admin/RoleModify.vue'),
+          },
         ]
       },
       {
