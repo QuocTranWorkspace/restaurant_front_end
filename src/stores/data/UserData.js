@@ -1,5 +1,6 @@
 import api from "@/api/api"
 import { defineStore } from "pinia";
+import router from "../../router";
 
 export const userStore = defineStore("userStore", {
     state: () => ({
@@ -19,6 +20,14 @@ export const userStore = defineStore("userStore", {
         setRoles(roles) {
             this.roles = roles;
         },
+        async fetchUser(id) {
+            try {
+                const response = await api.get(`/user/${id}`);
+                return response.data.data;
+            } catch (error) {
+                console.log(error)
+            }
+        },
         async fetchUsers() {
             try {
                 const response = await api.get(`/user/userList`);
@@ -31,6 +40,12 @@ export const userStore = defineStore("userStore", {
             try {
                 const response = await api.get(`user/roleList`);
                 this.setRoles(response.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async saveOrUpdateUser(user) {
+            try {
             } catch (error) {
                 console.log(error);
             }

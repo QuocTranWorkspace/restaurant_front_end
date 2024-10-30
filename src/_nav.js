@@ -27,7 +27,7 @@ export default [
       {
         component: 'CNavItem',
         name: 'User Detail',
-        to: '/admin/user/:id',
+        to: '/admin/user/addUser',
       },
     ]
   },
@@ -49,7 +49,7 @@ export default [
       {
         component: 'CNavItem',
         name: 'Role Detail',
-        to: '/admin/role/:id',
+        to: '/admin/role/addRole',
       },
     ]
   },
@@ -93,7 +93,7 @@ export default [
       {
         component: 'CNavItem',
         name: 'Product Detail',
-        to: '/admin/category/addProduct',
+        to: '/admin/category/addCategory',
       }
     ]
   },

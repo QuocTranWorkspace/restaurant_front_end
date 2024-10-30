@@ -105,6 +105,7 @@ const routes = [
             path: '/admin/user/:id',
             name: 'Admin Detail',
             component: () => import('@/views/admin/UserModify.vue'),
+            props: true,
           }
         ]
       },
@@ -224,6 +225,9 @@ router.beforeEach((to, from, next) => {
       if (user.roles && user.roles.includes('ADMIN')) {
         next(); // Allow access
       } else {
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('jwt');
+        next({ path: '/login', query: { error: 'access_denied' } });
         throw new Error('Unauthorized access');
       }
     } else {
