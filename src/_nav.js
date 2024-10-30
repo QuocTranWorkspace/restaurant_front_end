@@ -15,18 +15,18 @@ export default [
   },
   {
     component: 'CNavItem',
-    name: 'User Management',
+    name: 'User',
     to: '/admin/user',
     icon: 'cil-fingerprint',
     items: [
       {
         component: 'CNavItem',
-        name: 'Management',
+        name: 'User Management',
         to: '/admin/user/management',
       },
       {
         component: 'CNavItem',
-        name: 'User detail',
+        name: 'User Detail',
         to: '/admin/user/:id',
       },
     ]
@@ -39,6 +39,7 @@ export default [
     component: 'CNavItem',
     name: 'Role',
     to: '/admin/role',
+    icon: 'cil-contact',
     items: [
       {
         component: 'CNavItem',
@@ -47,7 +48,7 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Modify role',
+        name: 'Role Detail',
         to: '/admin/role/:id',
       },
     ]
@@ -58,19 +59,41 @@ export default [
   },
   {
     component: 'CNavItem',
-    name: 'Product Management',
+    name: 'Product',
     to: '/admin/product',
     icon: 'cil-apple',
     items: [
       {
         component: "CNavItem",
-        name: 'Management',
+        name: 'Product Management',
         to: '/admin/product/management',
       },
       {
         component: 'CNavItem',
-        name: 'Add product',
+        name: 'Product Detail',
         to: '/admin/product/addProduct',
+      }
+    ]
+  },
+  {
+    component: 'CNavTitle',
+    name: 'Category',
+  },
+  {
+    component: 'CNavItem',
+    name: 'Category',
+    to: '/admin/category',
+    icon: 'cil-tags',
+    items: [
+      {
+        component: "CNavItem",
+        name: 'Category Management',
+        to: '/admin/category/management',
+      },
+      {
+        component: 'CNavItem',
+        name: 'Product Detail',
+        to: '/admin/category/addProduct',
       }
     ]
   },

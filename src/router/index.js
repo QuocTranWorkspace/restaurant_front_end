@@ -84,7 +84,7 @@ const routes = [
       },
       {
         path: '/admin/user',
-        name: 'User Management',
+        name: 'User',
         component: {
           render() {
             return h(resolveComponent('router-view'))
@@ -93,7 +93,7 @@ const routes = [
         children: [
           {
             path: '/admin/user/management',
-            name: 'Management U',
+            name: 'User Management',
             component: () => import('@/views/admin/UserManagement.vue'),
           },
           {
@@ -110,7 +110,7 @@ const routes = [
       },
       {
         path: '/admin/role',
-        name: 'Role Management',
+        name: 'Role',
         component: {
           render() {
             return h(resolveComponent('router-view'))
@@ -120,7 +120,7 @@ const routes = [
         children: [
           {
             path: '/admin/role/management',
-            name: 'Role M',
+            name: 'Role Management',
             component: () => import('@/views/admin/RoleManagement.vue'),
           },
           {
@@ -132,7 +132,7 @@ const routes = [
       },
       {
         path: '/admin/category',
-        name: 'Category Management',
+        name: 'Category',
         component: {
           render() {
             return h(resolveComponent('router-view'))
@@ -142,19 +142,19 @@ const routes = [
         children: [
           {
             path: '/admin/category/management',
-            name: 'Category M',
+            name: 'Category Management',
             component: () => import('@/views/admin/CategoryManagement.vue'),
           },
           {
             path: '/admin/category/:id',
-            name: 'Category Modify',
+            name: 'Category Detail',
             component: () => import('@/views/admin/CategoryModify.vue'),
           },
         ]
       },
       {
         path: '/admin/product',
-        name: 'Product Management',
+        name: 'Product',
         component: {
           render() {
             return h(resolveComponent('router-view'))
@@ -162,20 +162,20 @@ const routes = [
         },
         children: [
           {
+            path: '/admin/product/management',
+            name: 'Product Management',
+            component: () => import('@/views/admin/ProductManagement.vue'),
+          },
+          {
             path: '/admin/product/:id',
             name: 'Add Product',
             component: () => import('@/views/admin/ProductModify.vue'),
-          },
-          {
-            path: '/admin/product/management',
-            name: 'Management P',
-            component: () => import('@/views/admin/ProductManagement.vue'),
           },
         ]
       },
       {
         path: '/admin/order',
-        name: 'Order Management',
+        name: 'Order',
         component: {
           render() {
             return h(resolveComponent('router-view'))
@@ -185,7 +185,7 @@ const routes = [
         children: [
           {
             path: '/admin/order/management',
-            name: 'Management O',
+            name: 'Order Management',
             component: () => import('@/views/admin/OrderManagement.vue'),
           },
           {
