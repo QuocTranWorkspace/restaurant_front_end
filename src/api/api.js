@@ -32,16 +32,17 @@ api.interceptors.response.use(
       // If network error occurs (like expired token), redirect to login
       if (error.message.includes('Network Error')) {
         alert(error.message);
-        router.push('/login')
+        router.push('/login');
       }
     } else {
       const { status, data } = error.response;
 
       // Handle other status codes
-      if (status === 403 || status === 401) {
+      if (status === 401) {
         alert(`Username or password incorrect`);  
         console.warn('Unauthorized. Redirecting to login...');
-      } else {
+        router.push('/login')
+      } else if (status === 403) {
         console.error(`Error ${status}: ${data.message || 'Unknown error'}`);
       }
     }

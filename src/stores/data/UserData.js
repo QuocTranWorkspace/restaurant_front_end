@@ -48,7 +48,8 @@ export const userStore = defineStore("userStore", {
             try {
                 if (isNaN(id)) {
                     const response = await api.post(`user/addUser`, user);
-                    console.log(response.data.data);
+                    console.log(response.data.data + "hello");
+
                 }
                 else {
                     const response = await api.post(`user/${id}`, user);

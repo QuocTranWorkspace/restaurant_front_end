@@ -124,7 +124,7 @@
 <script setup>
 import { authStore } from "@/stores/auth/auth";
 import { ref, reactive } from "vue";
-import router from "../../router";
+import router from "@/router";
 const authStoreRegister = authStore();
 
 const successModal = ref(false);

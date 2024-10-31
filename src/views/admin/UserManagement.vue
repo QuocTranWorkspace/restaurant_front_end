@@ -57,6 +57,7 @@
                 color="primary"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="redirectDetail(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'info']" />
               </CButton>
@@ -92,6 +93,7 @@
 <script setup>
 import { userStore } from "@/stores/data/UserData";
 import { reactive, ref } from "vue";
+import router from "@/router";
 
 const userStoreInit = userStore();
 
@@ -102,6 +104,10 @@ let userList = ref([]);
 userStoreInit.fetchUsers().then(() => {
   userList.value = userStoreInit.getUsers;
 });
+
+const redirectDetail = (id) => {
+  router.push({ path: `/admin/user/${id}`, props: true });
+};
 
 const filters = reactive({
   fullname: { value: "", keys: ["firstName", "lastName"] },

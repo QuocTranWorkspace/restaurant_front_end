@@ -210,38 +210,32 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  try {
-    if (to.path.startsWith('/admin') || to.path.includes('/check-out')) {
-      const userData = sessionStorage.getItem('user');
-      
-      // Check if user data exists and is valid JSON
-      if (!userData) {
-        throw new Error('No user data found');
-      }
-
-      const user = JSON.parse(userData);
-      
-      // Ensure roles exist and the user has admin privileges
-      if (user.roles && user.roles.includes('ADMIN')) {
-        next(); // Allow access
-      } else {
-        sessionStorage.removeItem('user');
-        sessionStorage.removeItem('jwt');
-        next({ path: '/login', query: { error: 'access_denied' } });
-        throw new Error('Unauthorized access');
-      }
-    } else {
-      next(); // Public routes, proceed without checks
-    }
-  } catch (error) {
-    console.error(`Routing error: ${error.message}`);
-
-    sessionStorage.removeItem('user');
-    sessionStorage.removeItem('jwt');
-    
-    // Redirect to login page on any error
-    next({ path: '/login', query: { error: 'access_denied' } });
+  if (!router.hasRoute(to.name)) {
+    return next({ name: "Forbidden" });
   }
+
+  if (to.path.startsWith('/admin') || to.path.includes('/check-out')) {
+    const userData = sessionStorage.getItem('user');
+
+    if (!userData) {
+      console.error("No user data found");
+      sessionStorage.removeItem('jwt');
+      return next({ path: '/login', query: { error: 'access_denied' } });
+    }
+
+    const user = JSON.parse(userData);
+
+    if (user.roles && user.roles.includes('ADMIN')) {
+      return next();
+    } else {
+      console.error("Unauthorized access - not an admin");
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('jwt');
+      return next({ path: '/login', query: { error: 'access_denied' } });
+    }
+  }
+
+  return next();
 });
 
 export default router

@@ -42,7 +42,12 @@
     </CCol>
     <CCol md="12">
       <CFormLabel for="passwordU">Password</CFormLabel>
-      <CFormInput type="password" id="passwordU" placeholder="Some password" />
+      <CFormInput
+        type="password"
+        id="passwordU"
+        placeholder="Some password"
+        value="***********"
+      />
     </CCol>
     <CCol md="6">
       <CFormLabel for="phone">Customer Phone</CFormLabel>
@@ -95,9 +100,7 @@ const fetchUserData = async (userId) => {
 
 const handleSubmit = (event) => {
   event.preventDefault();
-  if (!isNaN(parseInt(props.id)) && parseInt(props.id) >= 0) {
-    userStoreInit.saveOrUpdateUser(user.value, props.id);
-  }
+  userStoreInit.saveOrUpdateUser(user.value, props.id);
 };
 
 watch(

@@ -26,6 +26,7 @@ export const authStore = defineStore("authStore", {
             this.user = null;
             this.token = null;
             sessionStorage.removeItem('jwt');
+            sessionStorage.removeItem('user');
         },
         async isUsernameAvaiable(username) {
             try {
@@ -77,6 +78,6 @@ export const authStore = defineStore("authStore", {
             } catch (error) {
                 console.error('Login failed: ', error);
             }
-        }        
+        },
     },
 })  
