@@ -44,8 +44,16 @@ export const userStore = defineStore("userStore", {
                 console.log(error);
             }
         },
-        async saveOrUpdateUser(user) {
+        async saveOrUpdateUser(user, id) {
             try {
+                if (isNaN(id)) {
+                    const response = await api.post(`user/addUser`, user);
+                    console.log(response.data.data);
+                }
+                else {
+                    const response = await api.post(`user/${id}`, user);
+                    console.log(response.data.data);
+                }
             } catch (error) {
                 console.log(error);
             }

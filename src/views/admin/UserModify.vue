@@ -10,20 +10,35 @@
         type="text"
         id="username"
         placeholder="username"
-        v-model="user.username"
+        v-model="user.userName"
       />
     </CCol>
     <CCol md="6">
       <CFormLabel for="emailU">Email</CFormLabel>
-      <CFormInput type="email" id="emailU" placeholder="Example@gmail.com" />
+      <CFormInput
+        type="email"
+        id="emailU"
+        placeholder="Example@gmail.com"
+        v-model="user.email"
+      />
     </CCol>
     <CCol md="6">
       <CFormLabel for="firstName">First Name</CFormLabel>
-      <CFormInput type="text" id="firstName" placeholder="Some name" />
+      <CFormInput
+        type="text"
+        id="firstName"
+        placeholder="Some name"
+        v-model="user.firstName"
+      />
     </CCol>
     <CCol md="6">
       <CFormLabel for="lastName">Last Name</CFormLabel>
-      <CFormInput type="text" id="lastName" placeholder="Some name" />
+      <CFormInput
+        type="text"
+        id="lastName"
+        placeholder="Some name"
+        v-model="user.lastName"
+      />
     </CCol>
     <CCol md="12">
       <CFormLabel for="passwordU">Password</CFormLabel>
@@ -31,14 +46,16 @@
     </CCol>
     <CCol md="6">
       <CFormLabel for="phone">Customer Phone</CFormLabel>
-      <CFormInput type="text" id="phone" placeholder="09********" />
+      <CFormInput type="text" id="phone" placeholder="09********" v-model="user.phone" />
     </CCol>
     <CCol xs="6">
       <CFormLabel for="address">Customer Address</CFormLabel>
-      <CFormInput id="address" placeholder="Hanoi e.t.c" />
+      <CFormInput id="address" placeholder="Hanoi e.t.c" v-model="user.address" />
     </CCol>
     <CCol xs="12">
-      <CButton color="primary" type="submit">Save or Update</CButton>
+      <CButton color="primary" type="submit" @click="handleSubmit"
+        >Save or Update</CButton
+      >
     </CCol>
   </CForm>
 </template>
@@ -55,7 +72,12 @@ const props = defineProps({
 
 const user = ref({
   id: "",
-  username: "",
+  userName: "",
+  email: "",
+  firstName: "",
+  lastName: "",
+  phone: "",
+  address: "",
 });
 
 const fetchUserData = async (userId) => {
@@ -68,6 +90,13 @@ const fetchUserData = async (userId) => {
     }
   } catch (error) {
     console.error("Error fetching user:", error);
+  }
+};
+
+const handleSubmit = (event) => {
+  event.preventDefault();
+  if (!isNaN(parseInt(props.id)) && parseInt(props.id) >= 0) {
+    userStoreInit.saveOrUpdateUser(user.value, props.id);
   }
 };
 
