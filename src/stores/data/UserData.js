@@ -36,25 +36,46 @@ export const userStore = defineStore("userStore", {
                 console.log(error);
             }
         },
+        async saveOrUpdateUser(user, id) {
+            try {
+                let response = null;
+                if (isNaN(id)) {
+                    response = await api.post(`user/addUser`, user);
+                }
+                else {
+                    response = await api.post(`user/${id}`, user);
+                }
+                alert(`Save ${response.data.data.userName} successful`);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async fetchRole(id) {
+            try {
+                const response = await api.get(`/role/${id}`);
+                return response.data.data;
+            } catch (error) {
+                console.log(error)
+            }
+        },
         async fetchRoles() {
             try {
-                const response = await api.get(`user/roleList`);
+                const response = await api.get(`role/roleList`);
                 this.setRoles(response.data.data);
             } catch (error) {
                 console.log(error);
             }
         },
-        async saveOrUpdateUser(user, id) {
+        async saveOrUpdateRole(role, id) {
             try {
+                let response = null;
                 if (isNaN(id)) {
-                    const response = await api.post(`user/addUser`, user);
-                    console.log(response.data.data + "hello");
-
+                    response = await api.post(`role/addRole`, role);
                 }
                 else {
-                    const response = await api.post(`user/${id}`, user);
-                    console.log(response.data.data);
+                    response = await api.post(`role/${id}`, role);
                 }
+                alert(`Save ${response.data.data.roleName} successful`);
             } catch (error) {
                 console.log(error);
             }

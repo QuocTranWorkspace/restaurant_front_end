@@ -48,6 +48,7 @@
                 color="secondary"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="redirectUpdate(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'pen-to-square']" />
               </CButton>
@@ -76,6 +77,7 @@
 <script setup>
 import { userStore } from "@/stores/data/UserData";
 import { reactive, ref } from "vue";
+import router from "@/router";
 
 const userStoreInit = userStore();
 
@@ -86,6 +88,10 @@ let roleList = ref([]);
 userStoreInit.fetchRoles().then(() => {
   roleList.value = userStoreInit.getRoles;
 });
+
+const redirectUpdate = (id) => {
+  router.push({ path: `/admin/role/${id}`, props: true });
+};
 
 const filters = reactive({
   name: { value: "", keys: ["roleName"] },

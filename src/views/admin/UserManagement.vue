@@ -57,7 +57,6 @@
                 color="primary"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
-                @click="redirectDetail(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'info']" />
               </CButton>
@@ -65,6 +64,7 @@
                 color="secondary"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="redirectUpdate(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'pen-to-square']" />
               </CButton>
@@ -105,7 +105,7 @@ userStoreInit.fetchUsers().then(() => {
   userList.value = userStoreInit.getUsers;
 });
 
-const redirectDetail = (id) => {
+const redirectUpdate = (id) => {
   router.push({ path: `/admin/user/${id}`, props: true });
 };
 

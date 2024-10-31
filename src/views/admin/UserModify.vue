@@ -40,7 +40,7 @@
         v-model="user.lastName"
       />
     </CCol>
-    <CCol md="12">
+    <CCol md="6">
       <CFormLabel for="passwordU">Password</CFormLabel>
       <CFormInput
         type="password"
@@ -48,6 +48,19 @@
         placeholder="Some password"
         value="***********"
       />
+    </CCol>
+    <CCol md="6">
+      <CFormLabel for="">Role</CFormLabel>
+      <div class="d-flex">
+        <CFormCheck
+          v-for="role in fetchRoles"
+          :key="role.roleName"
+          :id="role.id"
+          :value="role.roleName"
+          :label="role.roleName"
+          v-model="user.roles"
+        />
+      </div>
     </CCol>
     <CCol md="6">
       <CFormLabel for="phone">Customer Phone</CFormLabel>
@@ -75,6 +88,8 @@ const props = defineProps({
   id: String,
 });
 
+const roles = ref([]);
+
 const user = ref({
   id: "",
   userName: "",
@@ -83,7 +98,19 @@ const user = ref({
   lastName: "",
   phone: "",
   address: "",
+  roles: roles,
 });
+
+const fetchRoles = ref([]);
+(async () => {
+  try {
+    await userStoreInit.fetchRoles();
+    fetchRoles.value = userStoreInit.getRoles;
+    console.log(user.value.roles);
+  } catch (error) {
+    console.log(error);
+  }
+})();
 
 const fetchUserData = async (userId) => {
   try {

@@ -128,6 +128,7 @@ const routes = [
             path: '/admin/role/:id',
             name: 'Role Detail',
             component: () => import('@/views/admin/RoleModify.vue'),
+            props: true,
           },
         ]
       },
