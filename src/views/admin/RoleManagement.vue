@@ -56,6 +56,7 @@
                 color="danger"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="roleDelete(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'trash-can']" />
               </CButton>
@@ -86,11 +87,15 @@ const totalPages = ref(100);
 
 let roleList = ref([]);
 userStoreInit.fetchRoles().then(() => {
-  roleList.value = userStoreInit.getRoles;
+  roleList.value = userStoreInit.getRoles.filter((role) => role.status);
 });
 
 const redirectUpdate = (id) => {
   router.push({ path: `/admin/role/${id}`, props: true });
+};
+
+const roleDelete = (id) => {
+  userStoreInit.deleteRole(id);
 };
 
 const filters = reactive({

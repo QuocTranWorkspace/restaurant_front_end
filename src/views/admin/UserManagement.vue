@@ -72,6 +72,7 @@
                 color="danger"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="deleteUser(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'trash-can']" />
               </CButton>
@@ -107,6 +108,10 @@ userStoreInit.fetchUsers().then(() => {
 
 const redirectUpdate = (id) => {
   router.push({ path: `/admin/user/${id}`, props: true });
+};
+
+const deleteUser = (id) => {
+  userStoreInit.deleteUser(id);
 };
 
 const filters = reactive({

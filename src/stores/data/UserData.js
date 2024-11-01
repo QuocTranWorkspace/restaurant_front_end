@@ -50,6 +50,18 @@ export const userStore = defineStore("userStore", {
                 console.log(error);
             }
         },
+        async deleteUser(id) {
+            try {
+                let response = null;
+                if (!isNaN(id)) {
+                    response = await api.post(`user/deleteUser/${id}`);
+                    router.go();
+                }
+                alert(`Delete ${response.data.data.userName} successful`);
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async fetchRole(id) {
             try {
                 const response = await api.get(`/role/${id}`);
@@ -79,7 +91,19 @@ export const userStore = defineStore("userStore", {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        async deleteRole(id) {
+            try {
+                let response = null;
+                if (!isNaN(id)) {
+                    response = await api.post(`role/deleteRole/${id}`);
+                    router.go();
+                }
+                alert(`Delete ${response.data.data.userName} successful`);
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 })
 
