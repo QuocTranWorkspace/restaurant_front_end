@@ -1,5 +1,6 @@
 import api from "@/api/api"
 import { defineStore } from "pinia";
+import router from "@/router";
 
 export const productStore = defineStore("productStore", {
     state: () => ({
@@ -27,6 +28,14 @@ export const productStore = defineStore("productStore", {
                 console.log(error);
             }
         },
+        async fetchCategory(id) {
+            try {
+                const response = await api.get(`/category/${id}`);
+                return response.data.data
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async fetchCategories() {
             try {
                 const response = await api.get(`/category/categoryList`);
@@ -34,7 +43,33 @@ export const productStore = defineStore("productStore", {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        async saveOrUpdateCategory(category, id) {
+            try {
+                let response = null;
+                if (isNaN(id)) {
+                    response = await api.post(`category/addCategory`, category);
+                }
+                else {
+                    response = await api.post(`category/${id}`, category);
+                }
+                alert(`Save Category: ${response.data.data.categoryname} successful`);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async deleteCategory(id) {
+            try {
+                let response = null;
+                if (!isNaN(id)) {
+                    response = await api.post(`category/deleteCategory/${id}`);
+                    alert(`Delete category: ${response.data.data.categoryname} successful`);
+                    router.go();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 })
 

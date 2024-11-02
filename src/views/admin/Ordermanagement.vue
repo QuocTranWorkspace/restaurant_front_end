@@ -55,6 +55,7 @@
                 color="primary"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="redirectUpdate(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'info']" />
               </CButton>
@@ -91,6 +92,7 @@
 <script setup>
 import { ordersStore } from "@/stores/data/OrderData";
 import { reactive, ref } from "vue";
+import router from "@/router";
 
 const orderStoreInit = ordersStore();
 
@@ -101,6 +103,10 @@ let orderList = ref([]);
 orderStoreInit.fetchOrders().then(() => {
   orderList.value = orderStoreInit.getOrders.filter((data) => data.status);
 });
+
+const redirectUpdate = (id) => {
+  router.push({ path: `/admin/order/${id}`, props: true });
+};
 
 const deleteUser = (id) => {
   orderStoreInit.deleteOrder(id);

@@ -26,7 +26,6 @@ export const ordersStore = defineStore("orderStore", {
         async fetchOrder(id) {
             try {
                 const response = await api.get(`/order/${id}`);
-                console.log(response.data.data)
                 return response.data.data;
             } catch (error) {
                 console.log(error);
@@ -51,9 +50,9 @@ export const ordersStore = defineStore("orderStore", {
                 let response = null;
                 if (!isNaN(id)) {
                     response = await api.post(`order/deleteOrder/${id}`);
+                alert(`Delete order: ${response.data.data.code} successful`);
                     router.go();
                 }
-                alert(`Delete order: ${response.data.data.code} successful`);
             } catch (error) {
                 console.log(error);
             }

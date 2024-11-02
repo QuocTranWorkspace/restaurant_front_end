@@ -151,6 +151,7 @@ const routes = [
             path: '/admin/category/:id',
             name: 'Category Detail',
             component: () => import('@/views/admin/CategoryModify.vue'),
+            props: true,
           },
         ]
       },

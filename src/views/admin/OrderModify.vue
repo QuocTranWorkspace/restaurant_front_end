@@ -97,10 +97,10 @@ const fetchOrderData = async (userId) => {
       order.value = fetchedOrder;
       order.value.createdDate = new Date(order.value.createdDate);
     } else {
-      console.warn("User not found.");
+      console.warn("Order not found.");
     }
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error("Error fetching order:", error);
   }
 };
 

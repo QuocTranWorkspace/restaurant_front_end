@@ -41,6 +41,7 @@
                 color="primary"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="redirectUpdate(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'info']" />
               </CButton>
@@ -55,6 +56,7 @@
                 color="danger"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="deleteCategory(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'trash-can']" />
               </CButton>
@@ -74,18 +76,28 @@
 </template>
 
 <script setup>
-import { productStore } from "@/stores/data/ProductData";
 import { reactive, ref } from "vue";
+import { productStore } from "@/stores/data/ProductData";
+import router from "@/router";
 
 const productStoreInit = productStore();
 
 const currentPage = ref(1);
 const totalPages = ref(100);
 
-let categoryList = ref([]);
+const categoryList = ref([]);
+
 productStoreInit.fetchCategories().then(() => {
   categoryList.value = productStoreInit.getCategories.filter((data) => data.status);
 });
+
+const redirectUpdate = (id) => {
+  router.push({ path: `/admin/category/${id}`, props: true });
+};
+
+const deleteCategory = (id) => {
+  productStoreInit.deleteCategory(id);
+}
 
 const filters = reactive({
   category: { value: "", keys: ["categoryName"] },

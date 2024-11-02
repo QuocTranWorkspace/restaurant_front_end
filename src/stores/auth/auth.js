@@ -59,7 +59,6 @@ export const authStore = defineStore("authStore", {
                         
                 const userResponse = await api.get(`/auth/userAuthenticated`);
                 const user = userResponse.data;
-                console.log(userResponse.data)
                 this.setUser(user); 
         
                 if (this.user['roles'][0] === 'ADMIN') {

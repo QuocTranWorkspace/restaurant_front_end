@@ -97,9 +97,9 @@ export const userStore = defineStore("userStore", {
                 let response = null;
                 if (!isNaN(id)) {
                     response = await api.post(`role/deleteRole/${id}`);
-                    router.go();
-                }
                 alert(`Delete ${response.data.data.userName} successful`);
+                router.go();
+                }
             } catch (error) {
                 console.log(error);
             }
