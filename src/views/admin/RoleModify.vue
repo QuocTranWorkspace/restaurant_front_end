@@ -59,7 +59,7 @@ const fetchRoleData = async (roleId) => {
 
 const handleSubmit = (event) => {
   event.preventDefault();
-  userStoreInit.saveOrUpdateRole(role.value, props.id);
+  userStoreInit.saveOrUpdateRole(role.value, parseInt(props.id));
 };
 
 watch(

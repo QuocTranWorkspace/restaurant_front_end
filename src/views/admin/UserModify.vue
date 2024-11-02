@@ -127,7 +127,7 @@ const fetchUserData = async (userId) => {
 
 const handleSubmit = (event) => {
   event.preventDefault();
-  userStoreInit.saveOrUpdateUser(user.value, props.id);
+  userStoreInit.saveOrUpdateUser(user.value, parseInt(props.id));
 };
 
 watch(

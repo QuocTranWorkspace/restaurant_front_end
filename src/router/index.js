@@ -194,6 +194,7 @@ const routes = [
             path: '/admin/order/:id',
             name: 'Order Detail',
             component: () => import('@/views/admin/OrderModify.vue'),
+            props: true,
           },
         ]
       },
