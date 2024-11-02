@@ -40,10 +40,10 @@ export const userStore = defineStore("userStore", {
             try {
                 let response = null;
                 if (isNaN(id)) {
-                    response = await api.post(`user/addUser`, user);
+                    response = await api.post(`/user/addUser`, user);
                 }
                 else {
-                    response = await api.post(`user/${id}`, user);
+                    response = await api.post(`/user/${id}`, user);
                 }
                 alert(`Save ${response.data.data.userName} successful`);
             } catch (error) {
@@ -54,7 +54,7 @@ export const userStore = defineStore("userStore", {
             try {
                 let response = null;
                 if (!isNaN(id)) {
-                    response = await api.post(`user/deleteUser/${id}`);
+                    response = await api.post(`/user/deleteUser/${id}`);
                     router.go();
                 }
                 alert(`Delete ${response.data.data.userName} successful`);
@@ -72,7 +72,7 @@ export const userStore = defineStore("userStore", {
         },
         async fetchRoles() {
             try {
-                const response = await api.get(`role/roleList`);
+                const response = await api.get(`/role/roleList`);
                 this.setRoles(response.data.data);
             } catch (error) {
                 console.log(error);
@@ -82,10 +82,10 @@ export const userStore = defineStore("userStore", {
             try {
                 let response = null;
                 if (isNaN(id)) {
-                    response = await api.post(`role/addRole`, role);
+                    response = await api.post(`/role/addRole`, role);
                 }
                 else {
-                    response = await api.post(`role/${id}`, role);
+                    response = await api.post(`/role/${id}`, role);
                 }
                 alert(`Save ${response.data.data.roleName} successful`);
             } catch (error) {
@@ -96,7 +96,7 @@ export const userStore = defineStore("userStore", {
             try {
                 let response = null;
                 if (!isNaN(id)) {
-                    response = await api.post(`role/deleteRole/${id}`);
+                    response = await api.post(`/role/deleteRole/${id}`);
                 alert(`Delete ${response.data.data.userName} successful`);
                 router.go();
                 }

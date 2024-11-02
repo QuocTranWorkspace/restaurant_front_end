@@ -15,6 +15,11 @@ api.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
+    
+    if (config.data instanceof FormData) {
+      config.headers['Content-Type'] = 'multipart/form-data';
+    }
+
     return config;
   },
   (error) => {console.log(error)}
@@ -36,7 +41,6 @@ api.interceptors.response.use(
       }
     } else {
       const { status, data } = error.response;
-
       // Handle other status codes
       if (status === 401) {
         alert(`Username or password incorrect`);  
@@ -44,6 +48,7 @@ api.interceptors.response.use(
         router.push('/login')
       } else if (status === 403) {
         console.error(`Error ${status}: ${data.message || 'Unknown error'}`);
+        router.push('/home')
       }
     }
     // Forward the error if further handling is needed

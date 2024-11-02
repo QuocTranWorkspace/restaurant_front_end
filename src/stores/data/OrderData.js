@@ -35,10 +35,10 @@ export const ordersStore = defineStore("orderStore", {
             try {
                 let response = null;
                 if (isNaN(id)) {
-                    response = await api.post(`order/addOrder`, order);
+                    response = await api.post(`/order/addOrder`, order);
                 }
                 else {
-                    response = await api.post(`order/${id}`, order);
+                    response = await api.post(`/order/${id}`, order);
                 }
                 alert(`Save order: ${response.data.data.code} successful`);
             } catch (error) {
@@ -49,7 +49,7 @@ export const ordersStore = defineStore("orderStore", {
             try {
                 let response = null;
                 if (!isNaN(id)) {
-                    response = await api.post(`order/deleteOrder/${id}`);
+                    response = await api.post(`/order/deleteOrder/${id}`);
                 alert(`Delete order: ${response.data.data.code} successful`);
                     router.go();
                 }

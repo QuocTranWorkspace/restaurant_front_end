@@ -173,6 +173,7 @@ const routes = [
             path: '/admin/product/:id',
             name: 'Add Product',
             component: () => import('@/views/admin/ProductModify.vue'),
+            props: true,
           },
         ]
       },

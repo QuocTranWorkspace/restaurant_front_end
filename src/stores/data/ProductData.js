@@ -20,6 +20,15 @@ export const productStore = defineStore("productStore", {
         setCategories(categories) {
             this.categories = categories;
         },
+        async fetchProduct(id) {
+            try {
+                const response = await api.get(`/product/${id}`);
+                console.log(response.data.data)
+                return response.data.data;
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async fetchProducts() {
             try {
                 const response = await api.get(`/product/productList`);
@@ -28,10 +37,36 @@ export const productStore = defineStore("productStore", {
                 console.log(error);
             }
         },
+        async saveOrUpdateProduct(product, id) {
+            try {
+                let response = null;
+                if (isNaN(id)) {
+                    response = await api.post(`/product/addProduct`, product);
+                }
+                else {
+                    response = await api.post(`/product/${id}`, product);
+                }
+                alert(`Save product: ${response.data.data.productName} successful`);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async deleteProduct(id) {
+            try {
+                let response = null;
+                if (!isNaN(id)) {
+                    response = await api.post(`/product/deleteProduct/${id}`);
+                    alert(`Delete product: ${response.data.data.productName} successful`);
+                    router.go();
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async fetchCategory(id) {
             try {
                 const response = await api.get(`/category/${id}`);
-                return response.data.data
+                return response.data.data;
             } catch (error) {
                 console.log(error);
             }
@@ -48,10 +83,10 @@ export const productStore = defineStore("productStore", {
             try {
                 let response = null;
                 if (isNaN(id)) {
-                    response = await api.post(`category/addCategory`, category);
+                    response = await api.post(`/category/addCategory`, category);
                 }
                 else {
-                    response = await api.post(`category/${id}`, category);
+                    response = await api.post(`/category/${id}`, category);
                 }
                 alert(`Save Category: ${response.data.data.categoryname} successful`);
             } catch (error) {
@@ -62,7 +97,7 @@ export const productStore = defineStore("productStore", {
             try {
                 let response = null;
                 if (!isNaN(id)) {
-                    response = await api.post(`category/deleteCategory/${id}`);
+                    response = await api.post(`/category/deleteCategory/${id}`);
                     alert(`Delete category: ${response.data.data.categoryname} successful`);
                     router.go();
                 }

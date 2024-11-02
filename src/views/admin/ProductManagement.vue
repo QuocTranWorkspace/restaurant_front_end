@@ -55,6 +55,7 @@
                 color="primary"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="redirectUpdate(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'info']" />
               </CButton>
@@ -69,6 +70,7 @@
                 color="danger"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
+                @click="deleteProduct(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'trash-can']" />
               </CButton>
@@ -90,6 +92,7 @@
 <script setup>
 import { productStore } from "@/stores/data/ProductData";
 import { reactive, ref } from "vue";
+import router from "@/router";
 
 const productStoreInit = productStore();
 
@@ -100,6 +103,14 @@ let productList = ref([]);
 productStoreInit.fetchProducts().then(() => {
   productList.value = productStoreInit.getProducts.filter((data) => data.status);
 });
+
+const redirectUpdate = (id) => {
+  router.push({ path: `/admin/product/${id}`, props: true });
+};
+
+const deleteProduct = (id) => {
+  productStoreInit.deleteProduct(id);
+};
 
 const filters = reactive({
   name: { value: "", keys: ["name"] },
