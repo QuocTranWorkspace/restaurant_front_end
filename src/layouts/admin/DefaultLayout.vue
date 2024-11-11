@@ -1,8 +1,8 @@
 <script setup>
 import { CContainer } from "@coreui/vue";
-import AppFooter from "@/components/admin/AppFooter.vue";
-import AppHeader from "@/components/admin/AppHeader.vue";
-import AppSidebar from "@/components/admin/AppSidebar.vue";
+import AppFooter from "@/components/admin/AdminFooter.vue";
+import AppHeader from "@/components/admin/AdminHeader.vue";
+import AppSidebar from "@/components/admin/AdminSidebar.vue";
 </script>
 
 <template>

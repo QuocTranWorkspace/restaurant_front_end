@@ -1,24 +1,24 @@
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useColorModes } from '@coreui/vue'
+import { onMounted, ref } from "vue";
+import { useColorModes } from "@coreui/vue";
 
-import AppBreadcrumb from '@/components//admin/AppBreadcrumb.vue'
-import AppHeaderDropdownAccnt from '@/components/admin/AppHeaderDropdownAccnt.vue'
-import { useSidebarStore } from '@/stores/sidebar.js'
+import AppBreadcrumb from "@/components/user/UserBreadcrumb.vue";
+import AppHeaderDropdownAccnt from "@/components/user/UserHeaderDropdownAccnt.vue";
+import { useSidebarStore } from "@/stores/sidebar.js";
 
-const headerClassNames = ref('mb-4 p-0')
-const { colorMode, setColorMode } = useColorModes('coreui-free-vue-admin-template-theme')
-const sidebar = useSidebarStore()
+const headerClassNames = ref("mb-4 p-0");
+const { colorMode, setColorMode } = useColorModes("coreui-free-vue-admin-template-theme");
+const sidebar = useSidebarStore();
 
 onMounted(() => {
-  document.addEventListener('scroll', () => {
+  document.addEventListener("scroll", () => {
     if (document.documentElement.scrollTop > 0) {
-      headerClassNames.value = 'mb-4 p-0 shadow-sm'
+      headerClassNames.value = "mb-4 p-0 shadow-sm";
     } else {
-      headerClassNames.value = 'mb-4 p-0'
+      headerClassNames.value = "mb-4 p-0";
     }
-  })
-})
+  });
+});
 </script>
 
 <template>
