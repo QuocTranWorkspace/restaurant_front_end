@@ -3,7 +3,7 @@ import { RouterLink } from "vue-router";
 
 import { logo } from "@/assets/brand/logo";
 import { sygnet } from "@/assets/brand/sygnet";
-import { AppSidebarNav } from "@/components/user/UserSidebarNav.js";
+import { UserSidebarNav } from "@/components/user/UserSidebarNav.js";
 import { useSidebarStore } from "@/stores/sidebar.js";
 
 const sidebar = useSidebarStore();
@@ -12,7 +12,7 @@ const sidebar = useSidebarStore();
 <template>
   <CSidebar
     class="border-end"
-    colorScheme="dark"
+    colorScheme="light"
     position="fixed"
     :unfoldable="sidebar.unfoldable"
     :visible="sidebar.visible"
@@ -27,7 +27,7 @@ const sidebar = useSidebarStore();
       </RouterLink>
       <CCloseButton class="d-lg-none" dark @click="sidebar.toggleVisible()" />
     </CSidebarHeader>
-    <AppSidebarNav />
+    <UserSidebarNav />
     <CSidebarFooter class="border-top d-none d-lg-flex">
       <CSidebarToggler @click="sidebar.toggleUnfoldable()" />
     </CSidebarFooter>

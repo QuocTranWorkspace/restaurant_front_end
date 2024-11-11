@@ -1,7 +1,8 @@
 import { h, resolveComponent } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-import DefaultLayout from '@/layouts/admin/DefaultLayout'
+import AdminLayout from '@/layouts/admin/AdminLayout'
+import UserLayout from '@/layouts/user/UserLayout.vue'
 
 const routes = [
   {
@@ -20,10 +21,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () =>
-          import(
-            /* webpackChunkName: "dashboard" */ '@/views/admin/Dashboard.vue'
-          ),
+        component: UserLayout
       },
       {
         path: '/login',
@@ -38,24 +36,31 @@ const routes = [
       {
         path: '/products',
         name: 'Product Page',
-        component: () => import('@/views/base/Accordion.vue'),
+        component: () => import('@/views/error/Page404.vue'),
         children: [
           {
-            path: '/products/:id',
+            path: '/products/:category',
             name: 'Product Detail',
-            component: () => import('@/views/base/Accordion.vue'),
+            component: () => import('@/views/error/Page404.vue'),
+            props: true,
           },
         ],
       },
       {
+        path: '/product/:id',
+        name: 'Product Detail',
+        component: () => import('@/views/error/Page404.vue'),
+        props: true
+      },
+      {
         path: '/cart',
         name: 'Shopping Cart',
-        component: () => import('@/views/base/Accordion.vue'),
+        component: () => import('@/views/error/Page404.vue'),
       },
       {
         path: '/check-out',
         name: 'Check-out',
-        component: () => import('@/views/base/Accordion.vue'),
+        component: () => import('@/views/error/Page404.vue'),
       },
     ],
   },
@@ -72,7 +77,7 @@ const routes = [
   {
     path: '/admin',
     name: 'Restaurant Admin',
-    component: DefaultLayout,
+    component: AdminLayout,
     redirect: '/admin/dashboard',
     children: [
       {
