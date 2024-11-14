@@ -5,16 +5,29 @@
       <div class="col-md-6 p-4 bg-light section-left">
         <h3>User Information</h3>
         <form>
-          <div class="mb-3">
-            <label for="name" class="form-label">Full Name</label>
-            <input
-              type="text"
-              class="form-control"
-              id="name"
-              v-model="user.lastName"
-              readonly
-              required
-            />
+          <div class="mb-3 row">
+            <div class="col-6">
+              <label for="name" class="form-label">Last Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                v-model="user.lastName"
+                readonly
+                required
+              />
+            </div>
+            <div class="col-6">
+              <label for="name" class="form-label">First Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                v-model="user.firstName"
+                readonly
+                required
+              />
+            </div>
           </div>
           <div class="mb-3">
             <label for="email" class="form-label">Email Address</label>
@@ -34,7 +47,6 @@
               class="form-control"
               id="phone"
               v-model="user.phone"
-              readonly
               required
             />
           </div>
@@ -45,12 +57,15 @@
               class="form-control"
               id="address"
               v-model="user.address"
-              readonly
               required
             />
           </div>
           <div v-if="cartItems.length !== 0">
-            <button type="submit" class="btn btn-primary" @click="submitCheckout">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              @click="(event) => submitCheckout(event)"
+            >
               Proceed to Payment
             </button>
           </div>
@@ -101,6 +116,34 @@
         </ul>
       </div>
     </div>
+    <CModal
+      alignment="center"
+      :visible="confirmModal"
+      @close="
+        () => {
+          confirmModal = false;
+        }
+      "
+      aria-labelledby="confirmModal"
+    >
+      <CModalHeader>
+        <CModalTitle id="confirmModal">Order successful</CModalTitle>
+      </CModalHeader>
+      <CModalBody> Your order is being processed, please wait. </CModalBody>
+      <CModalFooter>
+        <CButton
+          color="secondary"
+          @click="
+            () => {
+              confirmModal = false;
+            }
+          "
+        >
+          Close
+        </CButton>
+        <CButton color="primary" @click="redirectHome">Home</CButton>
+      </CModalFooter>
+    </CModal>
   </div>
 </template>
 
@@ -108,15 +151,14 @@
 import { ref, computed } from "vue";
 import { cartStore } from "@/stores/data/CartData";
 import { productStore } from "@/stores/data/productData";
+import router from "@/router";
 
 const cartStoreInit = cartStore();
 const productStoreInit = productStore();
 
+const confirmModal = ref(false);
+
 const user = ref(JSON.parse(sessionStorage.getItem("user")));
-
-console.log(user.value);
-
-const cart = cartStoreInit.getCart;
 
 const cartItems = ref([]);
 
@@ -124,11 +166,12 @@ const loadCartItems = () => {
   cartItems.value = [];
   const cart = cartStoreInit.getCart;
 
-  // Fetch each product by ID and merge quantity
-  for (let item of cart) {
-    productStoreInit.fetchProduct(item.id).then((product) => {
-      cartItems.value.push({ ...product, quantity: item.quantity });
-    });
+  if (cart) {
+    for (let item of cart) {
+      productStoreInit.fetchProduct(item.id).then((product) => {
+        cartItems.value.push({ ...product, quantity: item.quantity });
+      });
+    }
   }
 };
 
@@ -157,9 +200,34 @@ const updateQuantity = (id, quantity) => {
   loadCartItems();
 };
 
-const submitCheckout = () => {
-  console.log("User info:", user.value);
-  console.log("Total price:", total.value);
-  alert("Checkout completed");
+const submitCheckout = (event) => {
+  event.preventDefault();
+  try {
+    const formData = new FormData();
+    if (user.value) {
+      formData.append("user", JSON.stringify(user.value));
+    }
+
+    let orderData = [];
+
+    for (let item of cartItems.value) {
+      orderData.push({ productId: item.id, quantity: item.quantity });
+    }
+
+    formData.append("order", JSON.stringify(orderData));
+
+    const response = cartStoreInit.saveOrUpdateOrder(formData);
+
+    if (response) {
+      confirmModal.value = true;
+      sessionStorage.removeItem("cart");
+    }
+  } catch (error) {
+    console.error("Error uploading product:", error);
+  }
+};
+
+const redirectHome = () => {
+  router.push("/home");
 };
 </script>

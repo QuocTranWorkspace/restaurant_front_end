@@ -23,7 +23,6 @@ productStoreInit.fetchProducts().then(() => {
 watch(
   () => props.category,
   (newCategory) => {
-    console.log(newCategory);
     if (newCategory) {
       productStoreInit.fetchFilteredProducts(newCategory);
     } else {

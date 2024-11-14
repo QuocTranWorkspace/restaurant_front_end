@@ -1,6 +1,5 @@
 import api from "@/api/api"
 import { defineStore } from "pinia";
-import router from "@/router";
 
 export const cartStore = defineStore("cartStore", {
     state: () => ({
@@ -15,10 +14,12 @@ export const cartStore = defineStore("cartStore", {
         initState() {
             const cart = sessionStorage.getItem('cart');
             if (cart === null || cart === undefined) {
-                sessionStorage.setItem('cart', null);
+                sessionStorage.setItem('cart', []);
             }
             else {
-                this.cart = cart === null ? [] : JSON.parse(cart)
+                if (cart !== "") {
+                    this.cart = JSON.parse(cart)
+                }
             }
         },
         addToCart(cartId, quantity) {
@@ -35,14 +36,6 @@ export const cartStore = defineStore("cartStore", {
             }
             sessionStorage.setItem('cart', JSON.stringify(this.cart));
         },
-        async placeOrder() {
-            try {
-                const response = api.post(`/order/addOrder`, this.cart);
-                console.log(response.data.data)
-            } catch (error) {
-                console.log(error);
-            }
-        },
         updateQuantity(id, quantity) {
             for (let cartItem of this.cart) {
                 console.log(cartItem.id, id)
@@ -57,6 +50,14 @@ export const cartStore = defineStore("cartStore", {
                 }
             }
             sessionStorage.setItem('cart', JSON.stringify(this.cart));
-        }
+        },
+        async saveOrUpdateOrder(order) {
+            try {
+                let response = await api.post(`/order/checkout`, order);
+                return response.data.data;
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 })

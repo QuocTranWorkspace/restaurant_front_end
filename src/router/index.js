@@ -52,7 +52,7 @@ const routes = [
       {
         path: '/product/:id',
         name: 'Product Detail',
-        component: () => import('@/views/error/Page404.vue'),
+        component: () => import('@/views/user/ProductDetail.vue'),
       },
       {
         path: '/cart',

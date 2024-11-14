@@ -15,7 +15,12 @@
         </span>
       </div>
       <div class="d-flex justify-content-between">
-        <CButton color="primary" href="#" class="col-5">Detail</CButton>
+        <CButton
+          color="primary"
+          class="col-5"
+          @click="(event) => handleDetail(event, product.id)"
+          >Detail</CButton
+        >
         <CButton
           color="success"
           class="col-5"
@@ -34,6 +39,7 @@
 <script setup>
 import { computed } from "vue";
 import { cartStore } from "@/stores/data/CartData";
+import router from "@/router";
 
 const cartStoreInit = cartStore();
 
@@ -54,11 +60,13 @@ const formatCurrency = (value) => {
   );
 };
 
-const handleDetail = () => {};
+const handleDetail = (event, id) => {
+  event.preventDefault();
+  router.push(`/product/${id}`);
+};
 
 const handleAdd = (event, id) => {
   event.preventDefault();
   cartStoreInit.addToCart(id, 1);
-  console.log(cartStoreInit.getCart[0]["quantity"]);
 };
 </script>
