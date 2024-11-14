@@ -55,14 +55,14 @@ const routes = [
         component: () => import('@/views/user/ProductDetail.vue'),
       },
       {
-        path: '/cart',
-        name: 'Shopping Cart',
-        component: () => import('@/views/error/Page404.vue'),
-      },
-      {
         path: '/check-out',
         name: 'Check-out',
-        component: () => import('@/views/user/check-out.vue'),
+        component: () => import('@/views/user/Check-out.vue'),
+      },
+      {
+        path: '/profile',
+        name: 'User Profile',
+        component: () => import('@/views/user/UserProfile.vue'),
       },
     ],
   },
@@ -245,7 +245,7 @@ router.beforeEach((to, from, next) => {
       return next({ path: '/login', query: { error: 'access_denied' } });
     }
   }
-  else if (to.path.includes('/check-out')) {
+  else if (to.path.includes('/check-out') || to.path.includes('/profile')) {
     const userData = sessionStorage.getItem('user');
 
     if (!userData) {

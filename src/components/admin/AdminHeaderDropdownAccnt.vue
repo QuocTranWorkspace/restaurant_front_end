@@ -1,7 +1,14 @@
 <script setup>
-import avatar from '@/assets/images/avatars/8.jpg'
+import avatar from "@/assets/images/avatars/8.jpg";
+import { authStore } from "@/stores/auth/auth";
 
-const itemsCount = 42
+const authStoreInit = authStore();
+
+const handleLogout = () => {
+  authStoreInit.logout();
+};
+
+const itemsCount = 42;
 </script>
 
 <template>
@@ -50,7 +57,9 @@ const itemsCount = 42
       </CDropdownItem>
       <CDropdownDivider />
       <CDropdownItem> <CIcon icon="cil-shield-alt" /> Lock Account </CDropdownItem>
-      <CDropdownItem> <CIcon icon="cil-lock-locked" /> Logout </CDropdownItem>
+      <CDropdownItem @click="handleLogout">
+        <CIcon icon="cil-lock-locked" /> Logout
+      </CDropdownItem>
     </CDropdownMenu>
   </CDropdown>
 </template>

@@ -28,6 +28,7 @@ export const authStore = defineStore("authStore", {
             this.token = null;
             sessionStorage.removeItem('jwt');
             sessionStorage.removeItem('user');
+            router.go();
         },
         async isUsernameAvaiable(username) {
             try {

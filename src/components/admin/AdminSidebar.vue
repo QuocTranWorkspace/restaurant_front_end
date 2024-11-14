@@ -7,6 +7,7 @@ import { AppSidebarNav } from "@/components/admin/AdminSidebarNav.js";
 import { useSidebarStore } from "@/stores/sidebar.js";
 
 const sidebar = useSidebarStore();
+sidebar.visible = true;
 </script>
 
 <template>

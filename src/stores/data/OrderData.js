@@ -23,6 +23,14 @@ export const ordersStore = defineStore("orderStore", {
                 console.log(error);
             }
         },
+        async fetchUserOrders(id) {
+            try {
+                const response = await api.get(`/order/orderList/${id}`);
+                return response.data.data;
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async fetchOrder(id) {
             try {
                 const response = await api.get(`/order/${id}`);

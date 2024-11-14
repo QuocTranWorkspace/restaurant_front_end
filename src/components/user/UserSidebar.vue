@@ -3,6 +3,7 @@ import { UserSidebarNav } from "@/components/user/UserSidebarNav.js";
 import { useSidebarStore } from "@/stores/sidebar.js";
 
 const sidebar = useSidebarStore();
+sidebar.visible = false;
 </script>
 
 <template>

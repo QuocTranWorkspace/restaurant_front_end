@@ -50,6 +50,17 @@ export const userStore = defineStore("userStore", {
                 console.log(error);
             }
         },
+        async updateProfile(user, id) {
+            try {
+                let response = null;
+                if (!isNaN(id)) {
+                    response = await api.post(`/user/profile/${id}`, user);
+                }
+                alert(`Save ${response.data.data.userName} successful`);
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async deleteUser(id) {
             try {
                 let response = null;

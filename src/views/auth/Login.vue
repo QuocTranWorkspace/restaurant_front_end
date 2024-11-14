@@ -32,12 +32,12 @@
                   </CInputGroup>
                   <CRow>
                     <CCol :xs="6">
-                      <CButton color="primary" class="px-4" @click="handleLogin"> Login </CButton>
+                      <CButton color="primary" class="px-4" @click="handleLogin">
+                        Login
+                      </CButton>
                     </CCol>
                     <CCol :xs="6" class="text-right">
-                      <CButton color="link" class="px-0">
-                        Forgot password?
-                      </CButton>
+                      <CButton color="link" class="px-0"> Forgot password? </CButton>
                     </CCol>
                   </CRow>
                 </CForm>
@@ -48,9 +48,8 @@
                 <div>
                   <h2>Sign up</h2>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
                   </p>
                   <CButton color="light" variant="outline" class="mt-3">
                     Register Now!
@@ -66,25 +65,23 @@
 </template>
 
 <script>
-  import { authStore } from '@/stores/auth/auth';
-  import { reactive } from 'vue';
-  
-  export default {
-    setup() {
-      const authStoreLogin = authStore();
+import { authStore } from "@/stores/auth/auth";
+import { reactive } from "vue";
 
-      const credentials = reactive({
-        username: '',
-        password: ''
-      });
-  
-      const handleLogin = () => {
-        authStoreLogin.login(credentials);
-      };
-  
-      return { credentials, handleLogin };
-    }
-  };
-  
+export default {
+  setup() {
+    const authStoreLogin = authStore();
+
+    const credentials = reactive({
+      username: "",
+      password: "",
+    });
+
+    const handleLogin = () => {
+      authStoreLogin.login(credentials);
+    };
+
+    return { credentials, handleLogin };
+  },
+};
 </script>
-  
