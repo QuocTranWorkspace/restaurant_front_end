@@ -10,7 +10,8 @@ export const authStore = defineStore("authStore", {
 
     getters: {
         isAuthenticated: (state) => { !!state.user },
-        isAdmin: (state) => { state.user?.role ==='ADMIN' }
+        isAdmin: (state) => { state.user?.role === 'ADMIN' },
+        getUser: (state) => { return state.user }
     },
 
     actions: {
@@ -64,8 +65,9 @@ export const authStore = defineStore("authStore", {
                 if (this.user['roles'][0] === 'ADMIN') {
                     router.push('/admin');
                 }
-                else if (this.user['roles'] === 'USER') {
+                else {
                     router.push('/home');
+                    router.go();
                 }
             } catch (error) {
                 console.error('Login failed: ', error);

@@ -17,7 +17,6 @@ const userNavList = ref([]);
 fetchCategories().then((value) => {
   categoryList.value = value;
   for (let item of categoryList.value) {
-    console.log(item);
     userNavList.value.push({
       component: 'CNavItem',
       name: item.categoryName,

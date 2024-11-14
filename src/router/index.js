@@ -1,5 +1,5 @@
 import { h, resolveComponent } from 'vue'
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import AdminLayout from '@/layouts/admin/AdminLayout'
 import UserLayout from '@/layouts/user/UserLayout.vue'
@@ -8,11 +8,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: {
-      render() {
-        return h(resolveComponent('router-view'))
-      }
-    },
+    component: UserLayout,
     redirect: '/home',
     children: [
       {
@@ -21,7 +17,9 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: UserLayout
+        component: () => import(
+          /* webpackChunkName: "dashboard" */ '@/views/user/Home.vue'
+        ),
       },
       {
         path: '/login',
@@ -36,12 +34,17 @@ const routes = [
       {
         path: '/products',
         name: 'Product Page',
-        component: () => import('@/views/error/Page404.vue'),
+        component: {
+          render() {
+            return h(resolveComponent('router-view'))
+          }
+        },
+        redirect: "/home",
         children: [
           {
             path: '/products/:category',
-            name: 'Product Detail',
-            component: () => import('@/views/error/Page404.vue'),
+            name: 'Product Filtered',
+            component: () => import('@/views/user/Home.vue'),
             props: true,
           },
         ],
@@ -50,7 +53,6 @@ const routes = [
         path: '/product/:id',
         name: 'Product Detail',
         component: () => import('@/views/error/Page404.vue'),
-        props: true
       },
       {
         path: '/cart',
@@ -60,7 +62,7 @@ const routes = [
       {
         path: '/check-out',
         name: 'Check-out',
-        component: () => import('@/views/error/Page404.vue'),
+        component: () => import('@/views/user/check-out.vue'),
       },
     ],
   },
@@ -210,7 +212,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior() {
     // always scroll to top
@@ -223,7 +225,7 @@ router.beforeEach((to, from, next) => {
     return next({ name: "Forbidden" });
   }
 
-  if (to.path.startsWith('/admin') || to.path.includes('/check-out')) {
+  if (to.path.startsWith('/admin')) {
     const userData = sessionStorage.getItem('user');
 
     if (!userData) {
@@ -241,6 +243,22 @@ router.beforeEach((to, from, next) => {
       sessionStorage.removeItem('user');
       sessionStorage.removeItem('jwt');
       return next({ path: '/login', query: { error: 'access_denied' } });
+    }
+  }
+  else if (to.path.includes('/check-out')) {
+    const userData = sessionStorage.getItem('user');
+
+    if (!userData) {
+      console.error("No user data found");
+      sessionStorage.removeItem('jwt');
+      return next({ path: '/login', query: { error: 'access_denied' } });
+    }
+  }
+  else if (to.path.startsWith('/login')) {
+    const userData = sessionStorage.getItem('user');
+
+    if (userData) {
+      return next({ path: '/home' });
     }
   }
 
