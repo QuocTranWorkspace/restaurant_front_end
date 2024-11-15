@@ -18,9 +18,13 @@ npm install
 ### 2. Start the Development Server
 Use the following command to start the front-end development server:
 ```bash
+npm run dev
+```
+or
+```bash
 npm run serve
 ```
-The application will be accessible at `http://localhost:3000`.
+The application will be accessible at `http://localhost:3001`.
 
 ### 3. Build for Production
 To build the front-end for production, run:
