@@ -95,15 +95,18 @@ const product = ref({
 
 const categories = ref([]);
 
+producStoreInit.fetchCategories().then(() => {
+  categories.value = producStoreInit.getCategories;
+  console.log(
+    JSON.stringify(product.value.category) === JSON.stringify(categories.value[0])
+  );
+  product.value.category = JSON.stringify(fetchProductData);
+});
+
 const fetchProductData = async (productId) => {
   try {
     const fetchedProduct = await producStoreInit.fetchProduct(parseInt(productId));
-    producStoreInit.fetchCategories().then(() => {
-      categories.value = producStoreInit.getCategories;
-      console.log(
-        JSON.stringify(product.value.category) === JSON.stringify(categories.value[0])
-      );
-    });
+
     if (fetchedProduct) {
       product.value = fetchedProduct;
       product.value.category = JSON.stringify(fetchProductData);
@@ -123,6 +126,8 @@ const handleSubmit = async (event) => {
       formData.append("avatar", imageFile.value);
     }
 
+    formData.append("category", JSON.parse(product.value.category).id);
+    product.value.category = null;
     formData.append("product", JSON.stringify(product.value));
 
     producStoreInit.saveOrUpdateProduct(formData, parseInt(props.id));
@@ -132,7 +137,7 @@ const handleSubmit = async (event) => {
 };
 
 const handleCategoryChange = (event) => {
-  this.product.category = JSON.parse(event.target.value);
+  product.value.category = JSON.parse(event.target.value);
 };
 
 watch(

@@ -29,7 +29,7 @@ onMounted(() => {
       </CHeaderToggler>
       <CHeaderNav class="d-none d-md-flex">
         <CNavItem>
-          <CNavLink href="/dashboard"> Dashboard </CNavLink>
+          <CNavLink href="/admin/dashboard"> Dashboard </CNavLink>
         </CNavItem>
         <CNavItem>
           <CNavLink href="#">Users</CNavLink>

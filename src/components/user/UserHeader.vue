@@ -92,7 +92,7 @@ onMounted(() => {
         </li>
         <CNavItem>
           <CNavLink href="/check-out">
-            <CIcon icon="cil-basket" size="lg" />
+            <CIcon icon="cil-basket" size="lg"></CIcon>
             <CBadge color="secondary" v-model="cartSize">{{ cartSize }}</CBadge>
           </CNavLink>
         </CNavItem>

@@ -11,7 +11,7 @@ export const authStore = defineStore("authStore", {
     getters: {
         isAuthenticated: (state) => { !!state.user },
         isAdmin: (state) => { state.user?.role === 'ADMIN' },
-        getUser: (state) => { return state.user }
+        getUser: (state) => { state.user = JSON.parse(sessionStorage.getItem('user')); return state.user }
     },
 
     actions: {

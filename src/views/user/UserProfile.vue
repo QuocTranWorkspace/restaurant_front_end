@@ -124,7 +124,12 @@
             <td>{{ row.totalPrice }}</td>
             <td>{{ row.customerName }}</td>
             <td>{{ row.customerAddress }}</td>
-            <td class="d-flex justify-content-evenly">True</td>
+            <td class="text-center">
+              <CBadge color="danger" v-if="row.deliveryStatus === 0">Cancelled</CBadge>
+              <CBadge color="warning" v-if="row.deliveryStatus === 1">Pending</CBadge>
+              <CBadge color="info" v-if="row.deliveryStatus === 2">Delivering</CBadge>
+              <CBadge color="success" v-if="row.deliveryStatus === 3">Success</CBadge>
+            </td>
           </tr>
         </template>
       </VTable>
@@ -163,10 +168,6 @@ let orderList = ref([]);
 orderStoreInit.fetchUserOrders(user.value.id).then((response) => {
   orderList.value = response.filter((data) => data.status);
 });
-
-const deleteUser = (id) => {
-  orderStoreInit.deleteOrder(id);
-};
 
 const filters = reactive({
   name: { value: "", keys: ["customerName"] },

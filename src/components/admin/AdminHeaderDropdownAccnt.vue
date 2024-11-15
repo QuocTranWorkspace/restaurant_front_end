@@ -2,10 +2,16 @@
 import avatar from "@/assets/images/avatars/8.jpg";
 import { authStore } from "@/stores/auth/auth";
 
+import router from "@/router";
+
 const authStoreInit = authStore();
 
 const handleLogout = () => {
   authStoreInit.logout();
+};
+
+const handleProfile = () => {
+  router.push("/profile");
 };
 
 const itemsCount = 42;
@@ -45,7 +51,9 @@ const itemsCount = 42;
       >
         Settings
       </CDropdownHeader>
-      <CDropdownItem> <CIcon icon="cil-user" /> Profile </CDropdownItem>
+      <CDropdownItem @click="handleProfile">
+        <CIcon icon="cil-user" /> Profile
+      </CDropdownItem>
       <CDropdownItem> <CIcon icon="cil-settings" /> Settings </CDropdownItem>
       <CDropdownItem>
         <CIcon icon="cil-dollar" /> Payments

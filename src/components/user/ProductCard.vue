@@ -1,5 +1,5 @@
 <template>
-  <CCard style="width: 18rem" class="mt-3 mb-3">
+  <CCard style="width: 18rem; height: 25rem" class="mt-3 mb-3">
     <CCardImage class="mt-3" orientation="top" :src="avatarSrc" />
     <CCardBody>
       <CCardTitle>{{ product.productName }}</CCardTitle>

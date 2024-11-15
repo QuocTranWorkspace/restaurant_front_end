@@ -40,6 +40,7 @@
               <CButton
                 color="primary"
                 class="p-0 d-flex align-items-center justify-content-center"
+                @click="redirectUpdate(row.id)"
                 style="width: 30px; height: 30px; border-radius: 8px"
               >
                 <font-awesome-icon :icon="['fas', 'info']" />
@@ -48,7 +49,6 @@
                 color="secondary"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"
-                @click="redirectUpdate(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'pen-to-square']" />
               </CButton>

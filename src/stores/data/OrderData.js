@@ -31,6 +31,14 @@ export const ordersStore = defineStore("orderStore", {
                 console.log(error);
             }
         },
+        async fetchOrderByCode(id) {
+            try {
+                const response = await api.get(`/order/detail/${id}`);
+                return response.data.data;
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async fetchOrder(id) {
             try {
                 const response = await api.get(`/order/${id}`);
