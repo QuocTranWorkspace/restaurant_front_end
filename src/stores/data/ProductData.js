@@ -40,6 +40,7 @@ export const productStore = defineStore("productStore", {
         async fetchFilteredProducts(categoryName) {
             try {
                 const response = await api.get(`/product/productList/${categoryName}`);
+                console.log(response.data.data)
                 this.setProducts(response.data.data);
             } catch (error) {
                 console.log(error);

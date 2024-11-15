@@ -1,7 +1,6 @@
 import { ref } from "vue";
 import api from "@/api/api"
 
-
 const fetchCategories = async () => {
   try {
     const response = await api.get(`/category/categoryList`);
@@ -21,7 +20,6 @@ fetchCategories().then((value) => {
       component: 'CNavItem',
       name: item.categoryName,
       to: `/products/${item.categoryName}`,
-      icon: 'cil-speedometer',
     })
   }
 });

@@ -15,19 +15,27 @@ const props = defineProps({
   category: String,
 });
 
-let productList = ref([]);
-productStoreInit.fetchProducts().then(() => {
-  productList.value = productStoreInit.getProducts.filter((data) => data.status);
-});
+const productList = ref([]);
+
+const fetchProducts = async (category) => {
+  try {
+    if (category) {
+      await productStoreInit.fetchFilteredProducts(category);
+    } else {
+      await productStoreInit.fetchProducts();
+    }
+    productList.value = productStoreInit.getProducts.filter((data) => data.status);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
+
+fetchProducts(props.category);
 
 watch(
   () => props.category,
   (newCategory) => {
-    if (newCategory) {
-      productStoreInit.fetchFilteredProducts(newCategory);
-    } else {
-      console.warn("Invalid category.");
-    }
+    fetchProducts(newCategory);
   },
   { immediate: true }
 );

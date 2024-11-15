@@ -24,5 +24,4 @@ app.use(SmartTable)
 app.provide('icons', icons)
 app.component('CIcon', CIcon)
 
-
 app.mount('#app')

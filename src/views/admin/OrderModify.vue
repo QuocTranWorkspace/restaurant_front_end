@@ -196,7 +196,6 @@ const filters = reactive({
 
 const handleStatusChange = (event) => {
   order.value.deliveryStatus = event.target.value;
-  console.log(order.value.deliveryStatus);
 };
 
 watch(

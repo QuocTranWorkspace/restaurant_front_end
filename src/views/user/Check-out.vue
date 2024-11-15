@@ -195,7 +195,6 @@ const image = (imagePath) => {
 };
 
 const updateQuantity = (id, quantity) => {
-  console.log(id, quantity);
   cartStoreInit.updateQuantity(id, quantity);
   loadCartItems();
 };
