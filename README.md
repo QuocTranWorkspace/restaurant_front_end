@@ -1,3 +1,64 @@
+
+# Restaurant Front-End Project Setup
+
+## Prerequisites
+- Node.js 16 or higher
+- Vue CLI
+
+---
+
+## Setup Instructions
+
+### 1. Install Dependencies
+Run the following command in the project root directory to install dependencies:
+```bash
+npm install
+```
+
+### 2. Start the Development Server
+Use the following command to start the front-end development server:
+```bash
+npm run serve
+```
+The application will be accessible at `http://localhost:3000`.
+
+### 3. Build for Production
+To build the front-end for production, run:
+```bash
+npm run build
+```
+
+---
+
+## How to Run
+1. Follow the backend setup instructions to start the Spring Boot server.
+2. Start the front-end development server using `npm run serve`.
+3. Open `http://localhost:3000` in your web browser.
+
+---
+
+## Login with Default Accounts
+The application has two default accounts for testing purposes:
+
+### Admin Account
+- **Username:** admin  
+- **Password:** Admin@123  
+
+### User Account
+- **Username:** non_admin  
+- **Password:** Non_admin@123  
+
+### Steps to Create Products
+1. Log in using the admin account (admin/Admin@123).
+2. Navigate to the product management section in the admin panel.
+3. Use the interface to add, update, or delete products as needed.
+
+---
+
+### Notes
+- Ensure the backend server is running before using the application.
+- The default accounts are for development and testing only. Update them for production environments.
+
 # Routes
 
 ## Public Routes
