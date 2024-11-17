@@ -6,7 +6,7 @@
     </CCol>
     <CCol md="6">
       <CFormLabel for="orderID">ID</CFormLabel>
-      <CFormInput type="text" id="orderID" placeholder="ID" v-model="product.id" />
+      <CFormInput type="text" id="orderID" placeholder="ID" v-model="product.id" readonly/>
     </CCol>
     <CCol md="6">
       <CFormLabel for="productName">Product Name</CFormLabel>

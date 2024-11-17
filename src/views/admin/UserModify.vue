@@ -2,7 +2,7 @@
   <CForm class="row g-3">
     <CCol md="12">
       <CFormLabel for="orderID">ID</CFormLabel>
-      <CFormInput type="text" id="orderID" placeholder="ID" v-model="user.id" />
+      <CFormInput type="text" id="orderID" placeholder="ID" v-model="user.id" readonly/>
     </CCol>
     <CCol md="6">
       <CFormLabel for="username">Username</CFormLabel>

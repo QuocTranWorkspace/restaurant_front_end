@@ -2,7 +2,13 @@
   <CForm class="row g-3">
     <CCol md="12">
       <CFormLabel for="categoryID">ID</CFormLabel>
-      <CFormInput type="text" id="categoryID" placeholder="ID" v-model="category.id" />
+      <CFormInput
+        type="text"
+        id="categoryID"
+        placeholder="ID"
+        v-model="category.id"
+        readonly
+      />
     </CCol>
     <CCol md="12">
       <CFormLabel for="categoryName">Role Name</CFormLabel>

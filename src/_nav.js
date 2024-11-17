@@ -92,7 +92,7 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Product Detail',
+        name: 'Category Detail',
         to: '/admin/category/addCategory',
       }
     ]
