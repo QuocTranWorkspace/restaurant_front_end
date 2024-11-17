@@ -1,34 +1,24 @@
 <template>
-  <CCard style="width: 18rem; height: 25rem" class="mt-3 mb-3">
-    <CCardImage class="mt-3" orientation="top" :src="avatarSrc" />
-    <CCardBody>
-      <CCardTitle>{{ product.productName }}</CCardTitle>
-      <CCardText>
+  <CCard class="product-card card mt-3 mb-3 h-100">
+    <CCardImage class="card-img-top img-fluid" orientation="top" :src="avatarSrc" />
+    <CCardBody class="card-body d-flex flex-column">
+      <CCardTitle class="card-title">{{ product.productName }}</CCardTitle>
+      <CCardText class="card-text flex-grow-1">
         {{ product.productDescription }}
       </CCardText>
-      <div class="d-flex justify-content-start align-items-center mb-2">
-        <span style="text-decoration: line-through; color: gray; margin-right: 10px">
+      <div class="d-flex justify-content-between mt-auto">
+        <span class="text-muted text-decoration-line-through me-2">
           {{ formatCurrency(product.originalPrice) }}
         </span>
-        <span style="font-weight: bold; color: green">
+        <span class="text-success fw-bold">
           {{ formatCurrency(product.salePrice) }}
         </span>
       </div>
-      <div class="d-flex justify-content-between">
-        <CButton
-          color="primary"
-          class="col-5"
-          @click="(event) => handleDetail(event, product.id)"
+      <div class="d-flex justify-content-between mt-2">
+        <CButton color="primary" class="col-5" @click="handleDetail($event, product.id)"
           >Detail</CButton
         >
-        <CButton
-          color="success"
-          class="col-5"
-          @click="
-            (event) => {
-              handleAdd(event, product.id);
-            }
-          "
+        <CButton color="success" class="col-5" @click="handleAdd($event, product.id)"
           >Add</CButton
         >
       </div>
@@ -70,3 +60,22 @@ const handleAdd = (event, id) => {
   cartStoreInit.addToCart(id, 1);
 };
 </script>
+
+<style scoped>
+.product-card {
+  max-height: 450px;
+}
+
+.card-img-top {
+  height: 50%;
+  object-fit: cover;
+}
+
+.card-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+</style>

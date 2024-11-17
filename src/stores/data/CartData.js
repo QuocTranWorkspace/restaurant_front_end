@@ -23,30 +23,22 @@ export const cartStore = defineStore("cartStore", {
             }
         },
         addToCart(cartId, quantity) {
-            if (this.cart.length === 0) {
-                this.cart.push({"id": cartId, "quantity": quantity});
+            const existingCartItem = this.cart.find(cartItem => cartItem.id === cartId);
+            if (existingCartItem) {
+                existingCartItem.quantity += quantity;
             } else {
-                for (let cartItem of this.cart) {
-                    if (cartItem.id === cartId) {
-                        cartItem = {"id": cartId, "quantity": cartItem.quantity++};
-                    } else {
-                        this.cart.push({"id": cartId, "quantity": quantity});
-                    }
-                }
+                this.cart.push({ id: cartId, quantity: quantity });
             }
             sessionStorage.setItem('cart', JSON.stringify(this.cart));
         },
         updateQuantity(id, quantity) {
-            for (let cartItem of this.cart) {
-                console.log(cartItem.id, id)
-                if (cartItem.id === id) {
-                    let tempCartItem = { "id": id, "quantity": cartItem.quantity + quantity };
-                    console.log(tempCartItem.quantity);
-                    if (tempCartItem.quantity <= 0) {
-                        this.cart.splice(this.cart.indexOf(cartItem), 1);
-                    } else {
-                        this.cart[this.cart.indexOf(cartItem)] = tempCartItem;
-                    }
+            const cartItemIndex = this.cart.findIndex(cartItem => cartItem.id === id);
+            if (cartItemIndex !== -1) {
+                const cartItem = this.cart[cartItemIndex];
+                cartItem.quantity += quantity;
+
+                if (cartItem.quantity <= 0) {
+                    this.cart.splice(cartItemIndex, 1);
                 }
             }
             sessionStorage.setItem('cart', JSON.stringify(this.cart));
