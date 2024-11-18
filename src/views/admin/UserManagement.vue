@@ -62,13 +62,6 @@
                 <font-awesome-icon :icon="['fas', 'info']" />
               </CButton>
               <CButton
-                color="secondary"
-                class="p-0 d-flex align-items-center justify-content-center"
-                style="width: 30px; height: 30px; border-radius: 8px"
-              >
-                <font-awesome-icon :icon="['fas', 'pen-to-square']" />
-              </CButton>
-              <CButton
                 color="danger"
                 class="p-0 d-flex align-items-center justify-content-center"
                 style="width: 30px; height: 30px; border-radius: 8px"

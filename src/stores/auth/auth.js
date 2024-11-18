@@ -33,6 +33,7 @@ export const authStore = defineStore("authStore", {
         async isUsernameAvaiable(username) {
             try {
                 const response = await api.get(`auth/validateUsername/${username}`);
+                console.log(response.data.data)
                 return response.data.data;
             } 
             catch (error) {

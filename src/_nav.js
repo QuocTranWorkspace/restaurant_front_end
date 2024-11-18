@@ -115,7 +115,7 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Order Product',
+        name: 'Order Detail',
         to: '/admin/order/orderProduct',
         icon: ''
       }

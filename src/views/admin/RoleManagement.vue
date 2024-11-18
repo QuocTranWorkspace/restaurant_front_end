@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <div class="d-flex flex-row-reverse mb-3">
       <div>
-        <label for="nameFilter" class="form-label">Filter by Email:</label>
+        <label for="nameFilter" class="form-label">Filter by Name:</label>
         <input
           id="nameFilter"
           type="text"
@@ -44,13 +44,6 @@
                 style="width: 30px; height: 30px; border-radius: 8px"
               >
                 <font-awesome-icon :icon="['fas', 'info']" />
-              </CButton>
-              <CButton
-                color="secondary"
-                class="p-0 d-flex align-items-center justify-content-center"
-                style="width: 30px; height: 30px; border-radius: 8px"
-              >
-                <font-awesome-icon :icon="['fas', 'pen-to-square']" />
               </CButton>
               <CButton
                 color="danger"

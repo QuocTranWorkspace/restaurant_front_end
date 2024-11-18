@@ -24,15 +24,33 @@
       </div>
     </CCardBody>
   </CCard>
+  <CModal
+    alignment="center"
+    :visible="successModal"
+    @close="() => (successModal = false)"
+  >
+    <CModalHeader>
+      <CModalTitle>Register Successful</CModalTitle>
+    </CModalHeader>
+    <CModalBody>
+      Add {{ product.productName }} successful! You can now
+      <CLink href="/check-out">Check out</CLink>.
+    </CModalBody>
+    <CModalFooter>
+      <CButton color="secondary" @click="() => (successModal = false)">Close</CButton>
+      <CButton color="primary" @click="redirectCheckout">Checkout</CButton>
+    </CModalFooter>
+  </CModal>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { cartStore } from "@/stores/data/CartData";
 import router from "@/router";
 
 const cartStoreInit = cartStore();
 
+const successModal = ref(false);
 const props = defineProps({
   product: null,
 });
@@ -57,7 +75,12 @@ const handleDetail = (event, id) => {
 
 const handleAdd = (event, id) => {
   event.preventDefault();
+  successModal.value = true;
   cartStoreInit.addToCart(id, 1);
+};
+
+const redirectCheckout = () => {
+  router.push("/check-out");
 };
 </script>
 

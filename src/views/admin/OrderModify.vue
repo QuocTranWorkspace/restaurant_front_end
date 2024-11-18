@@ -2,51 +2,80 @@
   <CForm class="row g-3">
     <CCol md="6">
       <CFormLabel for="orderID">ID</CFormLabel>
-      <CFormInput type="text" id="orderID" placeholder="ID" v-model="order.id" readonly/>
+      <CFormInput type="text" id="orderID" placeholder="ID" v-model="order.id" readonly />
     </CCol>
     <CCol md="6">
-      <CFormLabel for="code">Code</CFormLabel>
-      <CFormInput type="text" id="code" placeholder="Code" v-model="order.code" />
+      <CFormLabel for="code">Code <AteriskField /></CFormLabel>
+      <CFormInput
+        type="text"
+        id="code"
+        placeholder="Code"
+        v-model="order.code"
+        @blur="validateField('code')"
+      />
+      <div v-if="errors.code" class="text-danger">{{ errors.code }}</div>
     </CCol>
     <CCol md="6">
-      <CFormLabel for="customerName">Customer Name</CFormLabel>
+      <CFormLabel for="customerName">Customer Name <AteriskField /></CFormLabel>
       <CFormInput
         type="text"
         id="customerName"
         placeholder="Some name"
         v-model="order.customerName"
+        @blur="validateField('customerName')"
       />
+      <div v-if="errors.customerName" class="text-danger">{{ errors.customerName }}</div>
     </CCol>
     <CCol md="6">
-      <CFormLabel for="customerEmail">Customer Email</CFormLabel>
+      <CFormLabel for="customerEmail">Customer Email <AteriskField /></CFormLabel>
       <CFormInput
         type="email"
         id="customerEmail"
         placeholder="Example@gmail.com"
         v-model="order.customerEmail"
+        @blur="validateField('customerEmail')"
       />
+      <div v-if="errors.customerEmail" class="text-danger">
+        {{ errors.customerEmail }}
+      </div>
     </CCol>
     <CCol md="6">
-      <CFormLabel for="customerPhone">Customer Phone</CFormLabel>
+      <CFormLabel for="customerPhone">Customer Phone <AteriskField /></CFormLabel>
       <CFormInput
         type="text"
         id="customerPhone"
-        placeholder="09********"
+        placeholder="+01**********"
         v-model="order.customerPhone"
+        @blur="validateField('customerPhone')"
       />
+      <div v-if="errors.customerPhone" class="text-danger">
+        {{ errors.customerPhone }}
+      </div>
     </CCol>
     <CCol md="6">
-      <CFormLabel for="customerAddress">Customer Address</CFormLabel>
+      <CFormLabel for="customerAddress">Customer Address <AteriskField /></CFormLabel>
       <CFormInput
         type="email"
         id="customerAddress"
-        placeholder="Hanoi e.t.c"
+        placeholder="Main Street etc."
         v-model="order.customerAddress"
+        @blur="validateField('customerAddress')"
       />
+      <div v-if="errors.customerAddress" class="text-danger">
+        {{ errors.customerAddress }}
+      </div>
     </CCol>
     <CCol xs="12">
-      <CFormLabel for="totalPrice">Total Price</CFormLabel>
-      <CFormInput id="totalPrice" placeholder="199$" v-model="order.totalPrice" />
+      <CFormLabel for="totalPrice">Total Price <AteriskField /></CFormLabel>
+      <CFormInput
+        id="totalPrice"
+        placeholder="199$"
+        v-model="order.totalPrice"
+        @blur="validateField('totalPrice')"
+      />
+      <div v-if="errors.totalPrice" class="text-danger">
+        {{ errors.totalPrice }}
+      </div>
     </CCol>
     <CCol md="6">
       <CFormLabel for="orderDate">Order Date</CFormLabel>
@@ -57,7 +86,7 @@
       />
     </CCol>
     <CCol md="6">
-      <CFormLabel for="category">Category</CFormLabel>
+      <CFormLabel for="category">Category <AteriskField /></CFormLabel>
       <CFormSelect
         aria-label="Default select example"
         id="category"
@@ -141,6 +170,20 @@
 <script setup>
 import { ref, watch, reactive } from "vue";
 import { ordersStore } from "@/stores/data/OrderData";
+import AteriskField from "@/components/AteriskField.vue";
+
+const currentPage = ref(1);
+const totalPages = ref(100);
+
+let orderList = ref([]);
+
+const filters = reactive({
+  name: { value: "", keys: ["product.productName"] },
+});
+
+const handleStatusChange = (event) => {
+  order.value.deliveryStatus = event.target.value;
+};
 
 const orderStoreInit = ordersStore();
 
@@ -163,15 +206,75 @@ const order = ref({
   deliveryStatus: "",
 });
 
+const errors = reactive({
+  code: "",
+  customerName: "",
+  customerEmail: "",
+  customerPhone: "",
+  customerAddress: "",
+  totalPrice: "",
+});
+
+const validateField = (field) => {
+  errors[field] = "";
+
+  if (field === "code" && !order.value.code.trim()) {
+    errors.code = "Code is required.";
+  }
+
+  if (field === "customerName" && !order.value.customerName.trim()) {
+    errors.customerName = "Customer name is required.";
+  }
+
+  if (field === "customerEmail") {
+    const emailPattern = /\S+@\S+\.\S+/;
+    if (!emailPattern.test(order.value.customerEmail)) {
+      errors.customerEmail = "Please enter a valid email address.";
+    }
+  }
+
+  if (field === "customerPhone") {
+    const phonePattern = /^\+?[0-9]{10,15}$/;
+    if (!phonePattern.test(order.value.customerPhone)) {
+      errors.customerPhone = "Phone number must be valid and contain 10-15 digits.";
+    }
+  }
+
+  if (field === "customerAddress" && !order.value.customerAddress.trim()) {
+    errors.customerAddress = "Customer address is required.";
+  }
+
+  if (field === "totalPrice") {
+    if (
+      isNaN(parseFloat(order.value.totalPrice)) ||
+      parseFloat(order.value.totalPrice) <= 0 ||
+      order.value.totalPrice === undefined
+    ) {
+      errors.totalPrice = "Total price must be a positive number.";
+    }
+  }
+};
+
+const validateForm = () => {
+  const fields = [
+    "code",
+    "customerName",
+    "customerEmail",
+    "customerPhone",
+    "customerAddress",
+    "totalPrice",
+  ];
+  fields.forEach(validateField);
+
+  return Object.values(errors).every((error) => error === "");
+};
+
 const fetchOrderData = async (userId) => {
   try {
     const fetchedOrder = await orderStoreInit.fetchOrder(parseInt(userId));
     if (fetchedOrder) {
       order.value = fetchedOrder;
       order.value.createdDate = new Date(order.value.createdDate);
-      orderStoreInit.fetchOrderByCode(props.id).then((response) => {
-        orderList.value = response.filter((data) => data.status);
-      });
     } else {
       console.warn("Order not found.");
     }
@@ -182,20 +285,11 @@ const fetchOrderData = async (userId) => {
 
 const handleSubmit = (event) => {
   event.preventDefault();
-  orderStoreInit.saveOrUpdateOrder(order.value, parseInt(props.id));
-};
-
-const currentPage = ref(1);
-const totalPages = ref(100);
-
-let orderList = ref([]);
-
-const filters = reactive({
-  name: { value: "", keys: ["product.productName"] },
-});
-
-const handleStatusChange = (event) => {
-  order.value.deliveryStatus = event.target.value;
+  if (validateForm()) {
+    orderStoreInit.saveOrUpdateOrder(order.value, parseInt(props.id));
+  } else {
+    console.warn("Form validation failed.", errors);
+  }
 };
 
 watch(

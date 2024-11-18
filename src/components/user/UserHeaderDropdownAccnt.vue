@@ -7,7 +7,6 @@ import { ref } from "vue";
 const authStoreInit = authStore();
 
 const isAdmin = ref(authStoreInit.getUser);
-console.log(isAdmin.value);
 
 const handleLogout = () => {
   authStoreInit.logout();

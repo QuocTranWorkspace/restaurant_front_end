@@ -95,11 +95,17 @@
               <div>
                 <h6 class="my-0">{{ item.productName }}</h6>
                 <div class="quantity-controls d-flex align-items-center mt-1">
-                  <button class="btn btn-sm btn-secondary" @click="updateQuantity(1, -1)">
+                  <button
+                    class="btn btn-sm btn-secondary"
+                    @click="updateQuantity(item.id, -1)"
+                  >
                     -
                   </button>
                   <span class="mx-2">{{ item.quantity }}</span>
-                  <button class="btn btn-sm btn-secondary" @click="updateQuantity(1, 1)">
+                  <button
+                    class="btn btn-sm btn-secondary"
+                    @click="updateQuantity(item.id, 1)"
+                  >
                     +
                   </button>
                 </div>

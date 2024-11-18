@@ -1,7 +1,7 @@
 <template>
-  <CForm class="row g-3">
+  <CForm class="row g-3" @submit="handleSubmit" novalidate>
     <CCol md="12">
-      <CFormLabel for="categoryID">ID</CFormLabel>
+      <CFormLabel for="categoryID"> ID</CFormLabel>
       <CFormInput
         type="text"
         id="categoryID"
@@ -11,13 +11,15 @@
       />
     </CCol>
     <CCol md="12">
-      <CFormLabel for="categoryName">Role Name</CFormLabel>
+      <CFormLabel for="categoryName"> Category Name <AteriskField /> </CFormLabel>
       <CFormInput
         type="text"
         id="categoryName"
         placeholder="Some name"
         v-model="category.categoryName"
+        @blur="validateField('categoryName')"
       />
+      <div v-if="errors.categoryName" class="text-danger">{{ errors.categoryName }}</div>
     </CCol>
     <CCol md="12">
       <CFormLabel for="description">Description</CFormLabel>
@@ -26,16 +28,20 @@
         id="description"
         placeholder="Some description"
         v-model="category.categoryDescription"
+        @input="validateField('categoryDescription', $event)"
       />
+      <span class="text-danger">{{ errors.categoryDescription }}</span>
     </CCol>
     <CCol xs="12">
-      <CButton color="primary" type="submit" @click="handleSubmit">Save</CButton>
+      <CButton color="primary" type="submit" @click="handleSubmit($event)">Save</CButton>
     </CCol>
   </CForm>
 </template>
+
 <script setup>
-import { ref, watch } from "vue";
+import { reactive, watch } from "vue";
 import { productStore } from "@/stores/data/ProductData";
+import AteriskField from "@/components/AteriskField.vue";
 
 const producStoreInit = productStore();
 
@@ -43,28 +49,65 @@ const props = defineProps({
   id: String,
 });
 
-const category = ref({
+const category = reactive({
   id: "",
   categoryName: "",
   categoryDescription: "",
 });
 
+const errors = reactive({
+  categoryName: "",
+  categoryDescription: "",
+});
+
+const validateForm = () => {
+  const fields = ["categoryName", "categoryDescription"];
+  fields.forEach(validateField);
+
+  return Object.values(errors).every((error) => error === "");
+};
+
+const validateField = (field) => {
+  errors[field] = "";
+
+  if (field === "categoryName") {
+    if (!category.categoryName.trim()) {
+      errors.categoryName = "Category Name is required.";
+    } else if (category.categoryName.length < 3) {
+      errors.categoryName = "Category Name must be at least 3 characters.";
+    }
+  }
+
+  if (field === "categoryDescription") {
+    if (category.categoryDescription && category.categoryDescription.length > 255) {
+      errors.categoryDescription = "Description cannot exceed 255 characters.";
+    }
+  }
+};
+
+const handleSubmit = (event) => {
+  event.preventDefault();
+
+  if (!validateForm()) {
+    event.stopPropagation();
+    console.error("Validation failed", errors);
+  } else {
+    producStoreInit.saveOrUpdateCategory(category, parseInt(props.id));
+    console.log("Category saved:", category);
+  }
+};
+
 const fetchCategoryData = async (categoryId) => {
   try {
     const fetchedCategory = await producStoreInit.fetchCategory(parseInt(categoryId));
     if (fetchedCategory) {
-      category.value = fetchedCategory;
+      Object.assign(category, fetchedCategory);
     } else {
       console.warn("Category not found.");
     }
   } catch (error) {
     console.error("Error fetching category:", error);
   }
-};
-
-const handleSubmit = (event) => {
-  event.preventDefault();
-  producStoreInit.saveOrUpdateCategory(category.value, parseInt(props.id));
 };
 
 watch(

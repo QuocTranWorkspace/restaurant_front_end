@@ -48,7 +48,7 @@
           <td>{{ row.productName }}</td>
           <td>{{ row.originalPrice }}</td>
           <td>{{ row.salePrice }}</td>
-          <td>{{ row.category.categoryName }}</td>
+          <td>{{ row.category }}</td>
           <td class="d-flex justify-content-evenly">
             <div class="d-flex align-items-center justify-content-center gap-2">
               <CButton
@@ -58,13 +58,6 @@
                 @click="redirectUpdate(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'info']" />
-              </CButton>
-              <CButton
-                color="secondary"
-                class="p-0 d-flex align-items-center justify-content-center"
-                style="width: 30px; height: 30px; border-radius: 8px"
-              >
-                <font-awesome-icon :icon="['fas', 'pen-to-square']" />
               </CButton>
               <CButton
                 color="danger"
@@ -101,7 +94,26 @@ const totalPages = ref(100);
 
 let productList = ref([]);
 productStoreInit.fetchProducts().then(() => {
-  productList.value = productStoreInit.getProducts.filter((data) => data.status);
+  let product = ref({
+    id: "",
+    avatar: "",
+    category: "",
+    createdDate: "",
+    originalPrice: "",
+    productDescription: "",
+    productName: "",
+    salePrice: "",
+    status: "",
+    updatedDate: "",
+  });
+  let productListTemp = productStoreInit.getProducts.filter((data) => data.status);
+  for (let item of productListTemp) {
+    product.value = item;
+    if (product.value.category === null || product.value.category === "") {
+      product.value.category = item.category.categoryName;
+    }
+    productList.value.push(product.value);
+  }
 });
 
 const redirectUpdate = (id) => {
@@ -113,7 +125,7 @@ const deleteProduct = (id) => {
 };
 
 const filters = reactive({
-  name: { value: "", keys: ["name"] },
-  category: { value: "", keys: ["category.categoryName"] },
+  name: { value: "", keys: ["productName"] },
+  category: { value: "", keys: ["category"] },
 });
 </script>

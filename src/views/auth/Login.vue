@@ -51,7 +51,12 @@
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
                     eiusmod tempor incididunt ut labore et dolore magna aliqua.
                   </p>
-                  <CButton color="light" variant="outline" class="mt-3">
+                  <CButton
+                    color="light"
+                    variant="outline"
+                    class="mt-3"
+                    @click="handleRegister"
+                  >
                     Register Now!
                   </CButton>
                 </div>
@@ -67,6 +72,7 @@
 <script>
 import { authStore } from "@/stores/auth/auth";
 import { reactive } from "vue";
+import router from "@/router";
 
 export default {
   setup() {
@@ -81,7 +87,11 @@ export default {
       authStoreLogin.login(credentials);
     };
 
-    return { credentials, handleLogin };
+    const handleRegister = () => {
+      router.push("/register");
+    };
+
+    return { credentials, handleLogin, handleRegister };
   },
 };
 </script>

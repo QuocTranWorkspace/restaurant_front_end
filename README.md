@@ -24,7 +24,7 @@ or
 ```bash
 npm run serve
 ```
-The application will be accessible at `http://localhost:3001`.
+The application will be accessible at `http://localhost:3000`.
 
 ### 3. Build for Production
 To build the front-end for production, run:

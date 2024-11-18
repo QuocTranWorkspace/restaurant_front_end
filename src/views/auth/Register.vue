@@ -4,45 +4,29 @@
       <CModal
         alignment="center"
         :visible="successModal"
-        @close="
-          () => {
-            successModal = false;
-          }
-        "
+        @close="() => (successModal = false)"
       >
         <CModalHeader>
-          <CModalTitle>Register Successfull</CModalTitle>
+          <CModalTitle>Register Successful</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          Register successful, now you can
-          <CLink href="http://localhost:3000/#/login">login</CLink>
-          with this Account
+          Registration successful! You can now
+          <CLink href="#/login">log in</CLink> with your new account.
         </CModalBody>
         <CModalFooter>
-          <CButton
-            color="secondary"
-            @click="
-              () => {
-                successModal = false;
-              }
-            "
-            >Close</CButton
-          >
+          <CButton color="secondary" @click="() => (successModal = false)">Close</CButton>
           <CButton color="primary" @click="redirectLogin">Log in</CButton>
         </CModalFooter>
       </CModal>
+
       <CRow class="justify-content-center">
         <CCol :md="9" :lg="7" :xl="6">
           <CCard class="mx-4">
             <CCardBody class="p-4">
-              <CForm
-                class="row g-3 needs-validation"
-                @submit="handleRegister"
-                novalidate
-                :validated="validateForm"
-              >
+              <CForm @submit="handleRegister" novalidate>
                 <h1>Register</h1>
-                <p class="text-body-secondary">Create your account</p>
+                <p class="text-medium-emphasis">Create your account</p>
+
                 <CInputGroup class="mb-3">
                   <CInputGroupText>
                     <CIcon icon="cil-user" />
@@ -50,17 +34,20 @@
                   <CFormInput
                     placeholder="Username"
                     v-model="credentials.username"
+                    @input="(e) => validateField('username', e.target.value)"
                     required
-                    @input="(event) => validateField('username', event)"
                   />
+                  <div v-if="errors.username" class="text-danger">
+                    {{ errors.username }}
+                  </div>
                 </CInputGroup>
+
                 <CInputGroup class="mb-3">
                   <CInputGroupText>
                     <CIcon icon="cil-user" />
                   </CInputGroupText>
                   <CFormInput
                     placeholder="Firstname"
-                    autocomplete="firstname"
                     v-model="credentials.firstname"
                     required
                   />
@@ -70,20 +57,21 @@
                   <CFormInput
                     placeholder="Lastname"
                     v-model="credentials.lastname"
-                    autocomplete="lastname"
                     required
                   />
                 </CInputGroup>
+
                 <CInputGroup class="mb-3">
                   <CInputGroupText>@</CInputGroupText>
                   <CFormInput
                     placeholder="Email"
-                    autocomplete="email"
                     v-model="credentials.email"
+                    @input="(e) => validateField('email', e.target.value)"
                     required
-                    @input="(event) => validateField('email', event)"
                   />
+                  <div v-if="errors.email" class="text-danger">{{ errors.email }}</div>
                 </CInputGroup>
+
                 <CInputGroup class="mb-3">
                   <CInputGroupText>
                     <CIcon icon="cil-lock-locked" />
@@ -91,24 +79,30 @@
                   <CFormInput
                     type="password"
                     placeholder="Password"
-                    autocomplete="new-password"
                     v-model="credentials.password"
+                    @input="(e) => validateField('password', e.target.value)"
                     required
-                    @input="(event) => validateField('password', event)"
                   />
+                  <div v-if="errors.password" class="text-danger">
+                    {{ errors.password }}
+                  </div>
                 </CInputGroup>
-                <CInputGroup class="mb-4">
+
+                <CInputGroup class="mb-3">
                   <CInputGroupText>
                     <CIcon icon="cil-lock-locked" />
                   </CInputGroupText>
                   <CFormInput
                     type="password"
                     placeholder="Repeat password"
-                    autocomplete="new-password"
-                    @input="(event) => validateField('repeatPassword', event)"
+                    @input="(e) => validateField('repeatPassword', e.target.value)"
                     required
                   />
+                  <div v-if="errors.repeatPassword" class="text-danger">
+                    {{ errors.repeatPassword }}
+                  </div>
                 </CInputGroup>
+
                 <div class="d-grid">
                   <CButton color="success" type="submit">Create Account</CButton>
                 </div>
@@ -122,77 +116,70 @@
 </template>
 
 <script setup>
-import { authStore } from "@/stores/auth/auth";
 import { ref, reactive } from "vue";
+import { authStore } from "@/stores/auth/auth";
 import router from "@/router";
-const authStoreRegister = authStore();
 
+const authStoreRegister = authStore();
 const successModal = ref(false);
-const validateForm = ref();
+
 const credentials = reactive({
   username: "",
-  password: "",
   firstname: "",
   lastname: "",
   email: "",
+  password: "",
 });
 
 const errors = reactive({
   username: "",
-  password: "",
   email: "",
+  password: "",
   repeatPassword: "",
 });
 
-const validateField = (field, event) => {
+const validateField = async (field, value) => {
   errors[field] = "";
-  // Validate username
+
   if (field === "username") {
-    authStoreRegister.isUsernameAvaiable(event.target.value).then((value) => {
-      if (!value) {
-        errors[field] = `Username: "${credentials[field]}" has already existed`;
-        event.target.setCustomValidity(errors[field]);
-      }
-    });
-  }
-  console.log(errors[field]);
-
-  if (field === "password") {
-    const pwdFilter = /^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*[\d|@#$!%*?&])[\p{L}\d@#$!%*?&]{8,96}$/gmu;
-    if (!pwdFilter.test(credentials.password)) {
-      errors.password = `Password must contains at least 1 uppercase letter, digit, special character and more than 8 letters`;
+    if (!value.trim()) {
+      errors.username = "Username is required.";
+    } else {
+      const isAvailable = await authStoreRegister.isUsernameAvaiable(value);
+      if (!isAvailable) errors.username = "Username is already taken.";
+    }
+  } else if (field === "email") {
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(value)) {
+      errors.email = "Invalid email format.";
+    }
+  } else if (field === "password") {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{8,}$/;
+    if (!passwordRegex.test(value)) {
+      errors.password =
+        "Password must be at least 8 characters, include an uppercase, a number, and a special character.";
+    }
+  } else if (field === "repeatPassword") {
+    if (value !== credentials.password) {
+      errors.repeatPassword = "Passwords do not match.";
     }
   }
+};
 
-  if (field === "repeatPassword") {
-    if (credentials.password !== event.target.value) {
-      errors.repeatPassword = `Does not match`;
-    }
-  }
+const handleRegister = async (event) => {
+  event.preventDefault();
+  await validateField("username", credentials.username);
+  validateField("email", credentials.email);
+  validateField("password", credentials.password);
+  validateField("repeatPassword", credentials.repeatPassword);
 
-  if (field === "email") {
-    const emailFilter = /\S+@\S+\.\S+/;
-    if (!emailFilter.test(credentials[field])) {
-      errors[field] = `Email must follows: Example@example.sth`;
-    }
+  if (!Object.values(errors).some((error) => error)) {
+    await authStoreRegister.register(credentials);
+    successModal.value = true;
   }
-  event.target.setCustomValidity(errors[field]);
 };
 
 const redirectLogin = () => {
   router.push("/login");
-};
-
-const handleRegister = (event) => {
-  const form = event.currentTarget;
-  if (form.checkValidity() === false) {
-    event.preventDefault();
-    event.stopPropagation();
-  } else {
-    event.preventDefault();
-    authStoreRegister.register(credentials);
-    successModal.value = true;
-  }
-  validateForm.value = true;
 };
 </script>

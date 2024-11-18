@@ -7,17 +7,17 @@
           id="nameFilter"
           type="text"
           class="form-control"
-          v-model="filters.name.value"
+          v-model="filters.code.value"
           placeholder="Enter Order code"
         />
       </div>
       <div>
-        <label for="nameFilter" class="form-label">Filter by Name:</label>
+        <label for="nameFilter" class="form-label">Filter by Customer Name:</label>
         <input
           id="nameFilter"
           type="text"
           class="form-control"
-          v-model="filters.code.value"
+          v-model="filters.name.value"
           placeholder="Enter customer name"
         />
       </div>
@@ -38,6 +38,7 @@
           <VTh sortKey="totalPrice">Total Price</VTh>
           <th>Customer</th>
           <th>Address</th>
+          <th class="text-center">Status</th>
           <th class="text-center col-2">Actions</th>
         </tr>
       </template>
@@ -49,6 +50,12 @@
           <td>{{ row.totalPrice }}</td>
           <td>{{ row.customerName }}</td>
           <td>{{ row.customerAddress }}</td>
+          <td class="text-center">
+            <CBadge color="danger" v-if="row.deliveryStatus === 0">Cancelled</CBadge>
+            <CBadge color="warning" v-if="row.deliveryStatus === 1">Pending</CBadge>
+            <CBadge color="info" v-if="row.deliveryStatus === 2">Delivering</CBadge>
+            <CBadge color="success" v-if="row.deliveryStatus === 3">Success</CBadge>
+          </td>
           <td class="d-flex justify-content-evenly">
             <div class="d-flex align-items-center justify-content-center gap-2">
               <CButton
@@ -58,13 +65,6 @@
                 @click="redirectUpdate(row.id)"
               >
                 <font-awesome-icon :icon="['fas', 'info']" />
-              </CButton>
-              <CButton
-                color="secondary"
-                class="p-0 d-flex align-items-center justify-content-center"
-                style="width: 30px; height: 30px; border-radius: 8px"
-              >
-                <font-awesome-icon :icon="['fas', 'pen-to-square']" />
               </CButton>
               <CButton
                 color="danger"
