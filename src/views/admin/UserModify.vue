@@ -196,7 +196,9 @@ const validateField = async (field, event) => {
       break;
     case "password":
       errors.value.password =
-        event.target.value.trim() >= 6 ? "" : "Password must be at least 6 characters.";
+        event.target.value.trim().length >= 6
+          ? ""
+          : "Password must be at least 6 characters.";
       break;
     default:
       break;

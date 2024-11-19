@@ -160,6 +160,7 @@ const validateField = async (field, value) => {
         "Password must be at least 8 characters, include an uppercase, a number, and a special character.";
     }
   } else if (field === "repeatPassword") {
+    console.log(value, credentials.password);
     if (value !== credentials.password) {
       errors.repeatPassword = "Passwords do not match.";
     }
@@ -171,7 +172,6 @@ const handleRegister = async (event) => {
   await validateField("username", credentials.username);
   validateField("email", credentials.email);
   validateField("password", credentials.password);
-  validateField("repeatPassword", credentials.repeatPassword);
 
   if (!Object.values(errors).some((error) => error)) {
     await authStoreRegister.register(credentials);
