@@ -41,6 +41,7 @@ export const cartStore = defineStore("cartStore", {
                     this.cart.splice(cartItemIndex, 1);
                 }
             }
+            this.cart.sort((a, b) => a.id - b.id);
             sessionStorage.setItem('cart', JSON.stringify(this.cart));
         },
         async saveOrUpdateOrder(order) {

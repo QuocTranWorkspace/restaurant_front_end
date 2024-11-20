@@ -108,13 +108,16 @@ productStoreInit.fetchProducts().then(() => {
   });
   let productListTemp = productStoreInit.getProducts.filter((data) => data.status);
   for (let item of productListTemp) {
-    product.value = item;
-    if (product.value.category === null || product.value.category === "") {
-      product.value.category = item.category.categoryName;
+    if (item) {
+      product.value = item;
+      product.value.category = normalizeCategory(item.category);
     }
     productList.value.push(product.value);
   }
 });
+
+const normalizeCategory = (category) =>
+  typeof category === "object" ? category.categoryName : category;
 
 const redirectUpdate = (id) => {
   router.push({ path: `/admin/product/${id}`, props: true });

@@ -227,7 +227,7 @@ watch(
   (newId) => {
     if (!isNaN(parseInt(newId)) && parseInt(newId) >= 0) {
       fetchUserData(newId);
-      fetchRoles();
+      userStoreInit.fetchRoles();
     } else {
       console.warn("Invalid user ID.");
     }

@@ -75,7 +75,6 @@
         </form>
       </div>
 
-      <!-- Cart Details Section -->
       <div class="col-md-6 p-4 bg-secondary text-white section-right">
         <h3>Cart Details</h3>
         <ul class="list-group mb-3">
@@ -168,16 +167,17 @@ const user = ref(JSON.parse(sessionStorage.getItem("user")));
 
 const cartItems = ref([]);
 
-const loadCartItems = () => {
-  cartItems.value = [];
+const loadCartItems = async () => {
   const cart = cartStoreInit.getCart;
-
   if (cart) {
-    for (let item of cart) {
-      productStoreInit.fetchProduct(item.id).then((product) => {
-        cartItems.value.push({ ...product, quantity: item.quantity });
-      });
-    }
+    const productPromises = cart.map((item) =>
+      productStoreInit.fetchProduct(item.id).then((product) => ({
+        ...product,
+        quantity: item.quantity,
+      }))
+    );
+
+    cartItems.value = await Promise.all(productPromises);
   }
 };
 

@@ -4,7 +4,7 @@ import api from "@/api/api"
 const fetchCategories = async () => {
   try {
     const response = await api.get(`/category/categoryList`);
-    return response.data.data;
+    return response.data.data.filter((category) => category.status === true);
   } catch (error) {
     console.log(error);
   }
