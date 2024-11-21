@@ -56,7 +56,12 @@ export const ordersStore = defineStore("orderStore", {
                 else {
                     response = await api.post(`/order/${id}`, order);
                 }
-                alert(`Save order: ${response.data.data.code} successful`);
+                console.log(response.data.data === null)
+                if (response.data.data !== null) {
+                    alert(`Save order: ${response.data.data.code} successful`);
+                } else {
+                    alert(`Save order failed, user does not exist`);
+                }
             } catch (error) {
                 console.log(error);
             }
