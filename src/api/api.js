@@ -48,10 +48,8 @@ api.interceptors.response.use(
         router.push('/login')
       } else if (status === 403) {
         console.error(`Error ${status}: ${data.message || 'Unknown error'}`);
-        router.push('/home')
       }
     }
-    // Forward the error if further handling is needed
     return Promise.reject(error);
   }
 );

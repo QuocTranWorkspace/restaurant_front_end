@@ -6,12 +6,20 @@
       <CCardText class="card-text flex-grow-1">
         {{ product.productDescription }}
       </CCardText>
-      <div class="d-flex justify-content-between mt-auto">
+      <div
+        class="d-flex justify-content-between mt-auto"
+        v-if="product.originalPrice > product.salePrice"
+      >
         <span class="text-muted text-decoration-line-through me-2">
           {{ formatCurrency(product.originalPrice) }}
         </span>
         <span class="text-success fw-bold">
           {{ formatCurrency(product.salePrice) }}
+        </span>
+      </div>
+      <div v-else>
+        <span class="text-muted text-decoration-line-through me-2">
+          {{ formatCurrency(product.originalPrice) }}
         </span>
       </div>
       <div class="d-flex justify-content-between mt-2">

@@ -10,15 +10,15 @@ export const productStore = defineStore("productStore", {
 
     getters: {
         getProducts: (state) => { return state.products },
-        getCategories: (state) => { return state.categories }
+        getCategories: (state) => { return state.categories.filter((data) => data.status) }
     },
 
     actions: {
         setProducts(products) {
-            this.products = products;
+            this.products = products.filter((data) => data.status);
         },
         setCategories(categories) {
-            this.categories = categories;
+            this.categories = categories.filter((data) => data.status);
         },
         async fetchProduct(id) {
             try {
@@ -31,8 +31,7 @@ export const productStore = defineStore("productStore", {
         async fetchProducts() {
             try {
                 const response = await api.get(`/product/productList`); 
-                console.log(response.data.data)
-                this.setProducts(response.data.data);
+                this.setProducts(response.data.data.filter((data) => data.status));
             } catch (error) {
                 console.log(error);
             }
@@ -40,7 +39,7 @@ export const productStore = defineStore("productStore", {
         async fetchFilteredProducts(categoryName) {
             try {
                 const response = await api.get(`/product/productList/${categoryName}`);
-                this.setProducts(response.data.data);
+                this.setProducts(response.data.data.filter((data) => data.status));
             } catch (error) {
                 console.log(error);
             }
@@ -82,7 +81,7 @@ export const productStore = defineStore("productStore", {
         async fetchCategories() {
             try {
                 const response = await api.get(`/category/categoryList`);
-                this.setCategories(response.data.data);
+                this.setCategories(response.data.data.filter((data) => data.status));
             } catch (error) {
                 console.log(error);
             }

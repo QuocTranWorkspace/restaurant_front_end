@@ -99,9 +99,6 @@ const categories = ref([]);
 
 producStoreInit.fetchCategories().then(() => {
   categories.value = producStoreInit.getCategories;
-  console.log(
-    JSON.stringify(product.value.category) === JSON.stringify(categories.value[0])
-  );
   product.value.category = JSON.stringify(fetchProductData);
 });
 

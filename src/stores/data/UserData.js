@@ -15,10 +15,10 @@ export const userStore = defineStore("userStore", {
 
     actions: {
         setUsers(users) {
-            this.users = users;
+            this.users = users.filter((data) => data.status);
         },
         setRoles(roles) {
-            this.roles = roles;
+            this.roles = roles.filter((data) => data.status);
         },
         async fetchUser(id) {
             try {

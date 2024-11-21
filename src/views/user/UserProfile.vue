@@ -45,7 +45,7 @@
             <CFormInput
               type="password"
               id="passwordU"
-              placeholder="Password"
+              placeholder="************"
               v-model="user.password"
             />
           </CCol>
@@ -54,13 +54,17 @@
             <CFormInput
               type="text"
               id="phone"
-              placeholder="09********"
+              placeholder="+01**********"
               v-model="user.phone"
             />
           </CCol>
           <CCol xs="12">
             <CFormLabel for="address">Customer Address</CFormLabel>
-            <CFormInput id="address" placeholder="Hanoi, etc." v-model="user.address" />
+            <CFormInput
+              id="address"
+              placeholder="Main Street, etc."
+              v-model="user.address"
+            />
           </CCol>
           <CCol xs="12" class="text-center mt-3">
             <CButton color="primary" type="submit" @click="handleSubmit"

@@ -8,12 +8,12 @@ export const ordersStore = defineStore("orderStore", {
     }),
 
     getters: {
-        getOrders: (state) => { return state.orders }
+        getOrders: (state) => { return state.orders.filter((data) => data.status) }
     },
 
     actions: {
         setOrders(orders) {
-            this.orders = orders
+            this.orders = orders.filter((data) => data.status)
         },
         async fetchOrders() {
             try {
@@ -26,7 +26,7 @@ export const ordersStore = defineStore("orderStore", {
         async fetchUserOrders(id) {
             try {
                 const response = await api.get(`/order/orderList/${id}`);
-                return response.data.data;
+                return response.data.data.filter((data) => data.status);
             } catch (error) {
                 console.log(error);
             }
@@ -34,6 +34,9 @@ export const ordersStore = defineStore("orderStore", {
         async fetchOrderByCode(id) {
             try {
                 const response = await api.get(`/order/detail/${id}`);
+                console.log(
+                    response.data.data
+                )
                 return response.data.data;
             } catch (error) {
                 console.log(error);
@@ -56,7 +59,6 @@ export const ordersStore = defineStore("orderStore", {
                 else {
                     response = await api.post(`/order/${id}`, order);
                 }
-                console.log(response.data.data === null)
                 if (response.data.data !== null) {
                     alert(`Save order: ${response.data.data.code} successful`);
                 } else {

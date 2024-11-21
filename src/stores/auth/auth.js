@@ -28,6 +28,7 @@ export const authStore = defineStore("authStore", {
             this.token = null;
             sessionStorage.removeItem('jwt');
             sessionStorage.removeItem('user');
+            sessionStorage.removeItem('cart')
             router.go();
         },
         async isUsernameAvaiable(username) {
@@ -54,6 +55,8 @@ export const authStore = defineStore("authStore", {
                     - Validate the roles and redirect to the determined url
                  */
                 const response = await api.post(`/auth/login`, credentials);
+
+                console.log(response.data.data)
         
                 const token = response.data.data;
 
@@ -71,7 +74,7 @@ export const authStore = defineStore("authStore", {
                     router.go();
                 }
             } catch (error) {
-                console.error('Login failed: ', error);
+                alert('Username or password incorrect');
             }
         },
         async register(credentials) {

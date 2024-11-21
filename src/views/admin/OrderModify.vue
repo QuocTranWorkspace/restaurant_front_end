@@ -118,7 +118,7 @@
         </div>
 
         <VTable
-          :data="orderList"
+          :data="orderProducts"
           :filters="filters"
           class="table table-hover table-bordered text-dark"
           :currentPage="currentPage"
@@ -275,6 +275,14 @@ const fetchOrderData = async (userId) => {
     if (fetchedOrder) {
       order.value = fetchedOrder;
       order.value.createdDate = new Date(order.value.createdDate);
+      const fetchedOrderProducts = await orderStoreInit.fetchOrderByCode(
+        parseInt(order.value.id)
+      );
+      if (fetchedOrderProducts) {
+        orderProducts.value = fetchedOrderProducts;
+      } else {
+        console.warn("Order products not found.");
+      }
     } else {
       console.warn("Order not found.");
     }
