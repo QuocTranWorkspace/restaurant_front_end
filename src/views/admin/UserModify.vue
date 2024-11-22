@@ -58,8 +58,8 @@
       <CFormInput
         type="password"
         id="passwordU"
-        placeholder="Some password"
-        value="***********"
+        placeholder="************"
+        v-model="user.password"
         @blur="validateField('password', $event)"
       />
       <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
