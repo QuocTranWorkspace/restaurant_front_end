@@ -7,7 +7,7 @@ export const cartStore = defineStore("cartStore", {
     }),
 
     getters: {
-        getCart: (state) => { return state.cart }
+        getCart: (state) => state.cart
     },
 
     actions: {

@@ -9,8 +9,8 @@ export const productStore = defineStore("productStore", {
     }),
 
     getters: {
-        getProducts: (state) => { return state.products },
-        getCategories: (state) => { return state.categories.filter((data) => data.status) }
+        getProducts: (state) => state.products,
+        getCategories: (state) => state.categories.filter((data) => data.status)
     },
 
     actions: {
@@ -81,6 +81,7 @@ export const productStore = defineStore("productStore", {
         async fetchCategories() {
             try {
                 const response = await api.get(`/category/categoryList`);
+                console.log(response.data.data)
                 this.setCategories(response.data.data.filter((data) => data.status));
             } catch (error) {
                 console.log(error);

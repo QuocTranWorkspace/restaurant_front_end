@@ -212,6 +212,7 @@ const handleSubmit = async (event) => {
   validateField("email");
   validateField("firstName");
   validateField("lastName");
+  validateField("password");
 
   const hasErrors = Object.values(errors.value).some((error) => error);
   if (!hasErrors) {

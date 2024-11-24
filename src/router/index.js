@@ -242,7 +242,7 @@ router.beforeEach((to, from, next) => {
       console.error("Unauthorized access - not an admin");
       sessionStorage.removeItem('user');
       sessionStorage.removeItem('jwt');
-      return next({ path: '/login', query: { error: 'access_denied' } });
+      return next({ path: '/404' });
     }
   }
   else if (to.path.includes('/check-out') || to.path.includes('/profile')) {

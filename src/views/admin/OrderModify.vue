@@ -15,6 +15,14 @@
       />
       <div v-if="errors.code" class="text-danger">{{ errors.code }}</div>
     </CCol>
+    <CCol md="12" class="d-none">
+      <CFormLabel for="orderDate">Order Date</CFormLabel>
+      <CFormInput
+        id="orderDate"
+        placeholder="MM-DD-YY HH:MM:SS"
+        v-model="order.createdDate"
+      />
+    </CCol>
     <CCol md="6">
       <CFormLabel for="customerName">Customer Name <AteriskField /></CFormLabel>
       <CFormInput
@@ -86,10 +94,10 @@
       />
     </CCol>
     <CCol md="6">
-      <CFormLabel for="category">Category <AteriskField /></CFormLabel>
+      <CFormLabel for="deliveryStatus">Delivery Status <AteriskField /></CFormLabel>
       <CFormSelect
         aria-label="Default select example"
-        id="category"
+        id="deliveryStatus"
         v-model="order.deliveryStatus"
         @change="handleStatusChange"
       >
@@ -174,9 +182,6 @@ import AteriskField from "@/components/AteriskField.vue";
 
 const currentPage = ref(1);
 const totalPages = ref(100);
-
-let orderList = ref([]);
-
 const filters = reactive({
   name: { value: "", keys: ["product.productName"] },
 });
@@ -199,6 +204,7 @@ const order = ref({
   totalPrice: "",
   customerName: "",
   customerEmail: "",
+  user: "",
   customerPhone: "",
   customerAddress: "",
   orderProducts: orderProducts,

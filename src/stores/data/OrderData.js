@@ -8,7 +8,7 @@ export const ordersStore = defineStore("orderStore", {
     }),
 
     getters: {
-        getOrders: (state) => { return state.orders.filter((data) => data.status) }
+        getOrders: (state) => state.orders.filter((data) => data.status)
     },
 
     actions: {
@@ -34,9 +34,7 @@ export const ordersStore = defineStore("orderStore", {
         async fetchOrderByCode(id) {
             try {
                 const response = await api.get(`/order/detail/${id}`);
-                console.log(
-                    response.data.data
-                )
+                console.log(response.data.data)
                 return response.data.data;
             } catch (error) {
                 console.log(error);

@@ -9,9 +9,9 @@ export const authStore = defineStore("authStore", {
     }),
 
     getters: {
-        isAuthenticated: (state) => { !!state.user },
-        isAdmin: (state) => { state.user?.role === 'ADMIN' },
-        getUser: (state) => { state.user = JSON.parse(sessionStorage.getItem('user')); return state.user }
+        isAuthenticated: (state) => !!state.user,
+        isAdmin: () => JSON.parse(sessionStorage.getItem('user'))?.roles.includes('ADMIN'),
+        getUser: (state) => state.user
     },
 
     actions: {
@@ -55,9 +55,7 @@ export const authStore = defineStore("authStore", {
                     - Validate the roles and redirect to the determined url
                  */
                 const response = await api.post(`/auth/login`, credentials);
-
-                console.log(response.data.data)
-        
+                
                 const token = response.data.data;
 
                 this.setToken(token);
@@ -65,6 +63,8 @@ export const authStore = defineStore("authStore", {
                 const userResponse = await api.get(`/auth/userAuthenticated`);
                 const user = userResponse.data;
                 this.setUser(user); 
+
+                console.log(this.isAdmin)
         
                 if (this.user['roles'][0] === 'ADMIN') {
                     router.push('/admin');

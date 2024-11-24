@@ -18,7 +18,7 @@
         </span>
       </div>
       <div v-else>
-        <span class="text-muted text-decoration-line-through me-2">
+        <span class="text-success fw-bold">
           {{ formatCurrency(product.originalPrice) }}
         </span>
       </div>

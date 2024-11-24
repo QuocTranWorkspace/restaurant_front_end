@@ -9,16 +9,16 @@ export const userStore = defineStore("userStore", {
     }),
 
     getters: {
-        getUsers: (state) => { return state.users },
-        getRoles: (state) => { return state.roles }
+        getUsers: (state) => state.users,
+        getRoles: (state) => state.roles
     },
 
     actions: {
         setUsers(users) {
-            this.users = users.filter((data) => data.status);
+            this.users = users;
         },
         setRoles(roles) {
-            this.roles = roles.filter((data) => data.status);
+            this.roles = roles;
         },
         async fetchUser(id) {
             try {
