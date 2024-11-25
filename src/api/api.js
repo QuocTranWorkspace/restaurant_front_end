@@ -26,10 +26,10 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => response, // Return response for successful requests
+  (response) => response,
   (error) => {
-    sessionStorage.removeItem('user');
-    sessionStorage.removeItem('jwt');
+            sessionStorage.removeItem('user');
+        sessionStorage.removeItem('jwt');
     if (!error.response) {
       // Network error or request timeout (e.g., token expired)
       console.error('Network Error:', error.message);
@@ -37,19 +37,17 @@ api.interceptors.response.use(
       // If network error occurs (like expired token), redirect to login
       if (error.message.includes('Network Error')) {
         alert(error.message);
-        router.push('/login');
-        router.go();
+        router.push('/404');
       }
     } else {
       const { status, data } = error.response;
-      // Handle other status codes
       if (status === 401) {
         alert(`Username or password incorrect`);  
         console.warn('Unauthorized. Redirecting to login...');
         router.push('/login')
-        router.go();
       } else if (status === 403) {
         console.error(`Error ${status}: ${data.message || 'Unknown error'}`);
+        router.push('/404');
       }
     }
     return Promise.reject(error);

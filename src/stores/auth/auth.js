@@ -10,7 +10,7 @@ export const authStore = defineStore("authStore", {
 
     getters: {
         isAuthenticated: (state) => !!state.user,
-        isAdmin: () => JSON.parse(sessionStorage.getItem('user'))?.roles.includes('ADMIN'),
+        isAdmin: () => JSON.parse(sessionStorage.getItem('user'))?.roles.includes('ADMIN') || JSON.parse(sessionStorage.getItem('user'))?.roles.includes('STAFF'),
         getUser: (state) => state.user
     },
 
@@ -64,13 +64,10 @@ export const authStore = defineStore("authStore", {
                 const user = userResponse.data;
                 this.setUser(user); 
 
-                console.log(this.isAdmin)
-        
                 if (this.user['roles'][0] === 'ADMIN') {
                     router.push('/admin');
                 }
                 else {
-                    router.push('/home');
                     router.go();
                 }
             } catch (error) {
@@ -79,8 +76,7 @@ export const authStore = defineStore("authStore", {
         },
         async register(credentials) {
             try {
-            const response = await api.post(`/auth/register`, credentials);
-            const userInfo = response.data.data;
+            await api.post(`/auth/register`, credentials);
             } catch (error) {
                 console.error('Login failed: ', error);
             }

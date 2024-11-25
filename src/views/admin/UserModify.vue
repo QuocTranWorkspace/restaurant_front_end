@@ -67,16 +67,17 @@
 
     <CCol md="6">
       <CFormLabel>Role <AteriskField /></CFormLabel>
-      <div class="d-flex">
-        <CFormCheck
+      <CFormSelect id="role" v-model="user.roles[0]" @change="validateField('role')">
+        <option
           v-for="role in fetchRoles"
           :key="role.roleName"
           :id="role.id"
-          :value="role.roleName"
           :label="role.roleName"
-          v-model="user.roles"
-        />
-      </div>
+          :value="JSON.stringify(role)"
+        >
+          {{ role.roleName }}
+        </option>
+      </CFormSelect>
     </CCol>
 
     <CCol md="6">
@@ -136,6 +137,7 @@ const errors = ref({
   password: "",
   phone: "",
   address: "",
+  role: "",
 });
 
 const fetchRoles = ref([]);
@@ -200,6 +202,9 @@ const validateField = async (field, event) => {
           ? ""
           : "Password must be at least 6 characters.";
       break;
+    case "role":
+      errors.value.role = user.value.roles[0] ? "" : "Role is required.";
+      break;
     default:
       break;
   }
@@ -208,11 +213,14 @@ const validateField = async (field, event) => {
 const handleSubmit = async (event) => {
   event.preventDefault();
 
-  await validateField("userName");
+  if (isNaN(props.id)) {
+    await validateField("userName");
+    validateField("password");
+  }
   validateField("email");
   validateField("firstName");
   validateField("lastName");
-  validateField("password");
+  validateField("role");
 
   const hasErrors = Object.values(errors.value).some((error) => error);
   if (!hasErrors) {

@@ -48,10 +48,10 @@ export const productStore = defineStore("productStore", {
             try {
                 let response = null;
                 if (isNaN(id)) {
-                    response = await api.post(`/product/addProduct`, product);
+                    response = await api.post(`/admin/product/addProduct`, product);
                 }
                 else {
-                    response = await api.post(`/product/${id}`, product);
+                    response = await api.post(`/admin/product/${id}`, product);
                 }
                 alert(`Save product: ${response.data.data.productName} successful`);
             } catch (error) {
@@ -62,7 +62,7 @@ export const productStore = defineStore("productStore", {
             try {
                 let response = null;
                 if (!isNaN(id)) {
-                    response = await api.post(`/product/deleteProduct/${id}`);
+                    response = await api.post(`/admin/product/deleteProduct/${id}`);
                     alert(`Delete product: ${response.data.data.productName} successful`);
                     router.go();
                 }
@@ -81,7 +81,6 @@ export const productStore = defineStore("productStore", {
         async fetchCategories() {
             try {
                 const response = await api.get(`/category/categoryList`);
-                console.log(response.data.data)
                 this.setCategories(response.data.data.filter((data) => data.status));
             } catch (error) {
                 console.log(error);
@@ -91,7 +90,7 @@ export const productStore = defineStore("productStore", {
             try {
                 let response = null;
                 if (isNaN(id)) {
-                    response = await api.post(`/category/addCategory`, category);
+                    response = await api.post(`/admin/category/addCategory`, category);
                 }
                 else {
                     response = await api.post(`/category/${id}`, category);
@@ -105,7 +104,7 @@ export const productStore = defineStore("productStore", {
             try {
                 let response = null;
                 if (!isNaN(id)) {
-                    response = await api.post(`/category/deleteCategory/${id}`);
+                    response = await api.post(`/admin/category/deleteCategory/${id}`);
                     alert(`Delete category: ${response.data.data.categoryname} successful`);
                     router.go();
                 }

@@ -17,7 +17,7 @@ export const ordersStore = defineStore("orderStore", {
         },
         async fetchOrders() {
             try {
-                const response = await api.get(`/order/orderList`);
+                const response = await api.get(`/admin/order/orderList`);
                 this.setOrders(response.data.data);
             } catch (error) {
                 console.log(error);
@@ -33,7 +33,7 @@ export const ordersStore = defineStore("orderStore", {
         },
         async fetchOrderByCode(id) {
             try {
-                const response = await api.get(`/order/detail/${id}`);
+                const response = await api.get(`/admin/order/detail/${id}`);
                 console.log(response.data.data)
                 return response.data.data;
             } catch (error) {
@@ -52,10 +52,10 @@ export const ordersStore = defineStore("orderStore", {
             try {
                 let response = null;
                 if (isNaN(id)) {
-                    response = await api.post(`/order/addOrder`, order);
+                    response = await api.post(`/admin/order/addOrder`, order);
                 }
                 else {
-                    response = await api.post(`/order/${id}`, order);
+                    response = await api.post(`/admin/order/${id}`, order);
                 }
                 if (response.data.data !== null) {
                     alert(`Save order: ${response.data.data.code} successful`);
@@ -70,7 +70,7 @@ export const ordersStore = defineStore("orderStore", {
             try {
                 let response = null;
                 if (!isNaN(id)) {
-                    response = await api.post(`/order/deleteOrder/${id}`);
+                    response = await api.post(`/admin/order/deleteOrder/${id}`);
                 alert(`Delete order: ${response.data.data.code} successful`);
                     router.go();
                 }

@@ -238,6 +238,13 @@ router.beforeEach((to, from, next) => {
 
     if (user.roles && user.roles.includes('ADMIN')) {
       return next();
+    } else if (user.roles && user.roles.includes('STAFF')) {
+      if (to.path.includes('/admin/user') || to.path.includes('/admin/role')) {
+        alert(`You don't have permission to access this page`);
+        next({ path: '/admin' })
+      } else {
+        return next();
+      }
     } else {
       console.error("Unauthorized access - not an admin");
       sessionStorage.removeItem('user');
