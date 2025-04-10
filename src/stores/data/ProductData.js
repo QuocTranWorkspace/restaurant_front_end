@@ -114,6 +114,10 @@ export const productStore = defineStore("productStore", {
         },
         async fetchProductImageUrl(productId) {
             // Check if we already have a valid URL in cache
+            if (!productId) {
+                console.error('Invalid productId provided to fetchProductImageUrl');
+                return null;
+            }
             const now = Date.now();
             if (
                 this.imageUrlCache[productId] && 
@@ -124,6 +128,10 @@ export const productStore = defineStore("productStore", {
             
             try {
                 const response = await api.get(`/product/${productId}/image`);
+                if (!response || !response.data || !response.data.url) {
+                    console.error(`Invalid response structure for product ${productId}`, response);
+                    return null;
+                }
                 const imageUrl = response.data.url;
                 
                 // Store in cache
