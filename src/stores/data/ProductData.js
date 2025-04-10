@@ -190,6 +190,9 @@ export const productStore = defineStore("productStore", {
             }
         },
         async fetchProductImageUrl(productId) {
+            // Add this temporary debugging code
+            console.log("Backend API URL:", import.meta.env.VITE_BASE_API_URL);
+            console.log("Product image endpoint being called:", `/product/1/image`);
             // Crucial safety check - validate input before proceeding
             if (!productId) {
                 console.error('Invalid productId provided to fetchProductImageUrl');
