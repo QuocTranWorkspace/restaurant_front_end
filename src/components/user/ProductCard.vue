@@ -74,13 +74,15 @@ const imageLoaded = ref(false);
 const imageError = ref(false);
 const fallbackImageUrl = "https://via.placeholder.com/300x200?text=No+Image";
 
-// Computed property for the image URL
 const imageUrl = computed(() => {
-  if (imageError.value) return fallbackImageUrl;
-  return productStoreInit.getProductImageUrl(props.product.id) || '';
+  if (!props.product || !props.product.id) return fallbackImageUrl;
+  
+  // Get URL from store or use fallback
+  const url = productStoreInit.getProductImageUrl(props.product.id);
+  return url || fallbackImageUrl;
 });
 
-// Load the image URL when the component mounts
+// On component mount, fetch the image URL
 onMounted(async () => {
   if (props.product && props.product.id) {
     try {

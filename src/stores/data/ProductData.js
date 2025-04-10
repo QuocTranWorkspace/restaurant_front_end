@@ -10,7 +10,32 @@ export const productStore = defineStore("productStore", {
 
     getters: {
         getProducts: (state) => state.products,
-        getCategories: (state) => state.categories.filter((data) => data.status)
+        getCategories: (state) => {
+            // Add safeguard against state.categories being null
+            return state.categories ? state.categories.filter(data => data.status) : [];
+        },
+        
+        // Add a getter for image URLs
+        getProductImageUrl: (state) => (productId) => {
+            // Safety check - if productId is falsy, return null immediately
+            if (!productId) return null;
+            
+            // Check if we have a cache entry and make sure we're not accessing properties
+            // of undefined objects
+            const cache = state.imageUrlCache || {};
+            const expiration = state.imageUrlExpiration || {};
+            
+            const now = Date.now();
+            if (
+                cache[productId] && 
+                (!expiration[productId] || expiration[productId] > now)
+            ) {
+                return cache[productId];
+            }
+            
+            // Return null if no cached URL (component will show fallback)
+            return null;
+        }
     },
 
     actions: {
@@ -113,11 +138,17 @@ export const productStore = defineStore("productStore", {
             }
         },
         async fetchProductImageUrl(productId) {
-            // Check if we already have a valid URL in cache
+            // Crucial safety check - validate input before proceeding
             if (!productId) {
                 console.error('Invalid productId provided to fetchProductImageUrl');
                 return null;
             }
+            
+            // Make sure these objects exist - this is critical
+            if (!this.imageUrlCache) this.imageUrlCache = {};
+            if (!this.imageUrlExpiration) this.imageUrlExpiration = {};
+            
+            // Check cache first
             const now = Date.now();
             if (
                 this.imageUrlCache[productId] && 
@@ -128,17 +159,21 @@ export const productStore = defineStore("productStore", {
             
             try {
                 const response = await api.get(`/product/${productId}/image`);
+                
+                // Validate response
                 if (!response || !response.data || !response.data.url) {
-                    console.error(`Invalid response structure for product ${productId}`, response);
+                    console.error(`Invalid response structure for product ${productId}`);
                     return null;
                 }
+                
                 const imageUrl = response.data.url;
                 
-                // Store in cache
+                // Safely store in cache
+                if (!this.imageUrlCache) this.imageUrlCache = {};
                 this.imageUrlCache[productId] = imageUrl;
                 
-                // Set expiration time (e.g., 1 hour from now)
-                // Adjust this based on your Backblaze B2 pre-signed URL expiration setting
+                // Safely set expiration
+                if (!this.imageUrlExpiration) this.imageUrlExpiration = {};
                 this.imageUrlExpiration[productId] = now + (60 * 60 * 1000);
                 
                 return imageUrl;
@@ -148,47 +183,20 @@ export const productStore = defineStore("productStore", {
             }
         },
         
-        // Add a method to prefetch multiple image URLs at once
-        async prefetchProductImageUrls(productIds) {
-            const now = Date.now();
-            const idsToFetch = productIds.filter(id => 
-                !this.imageUrlCache[id] || 
-                (this.imageUrlExpiration[id] && this.imageUrlExpiration[id] <= now)
-            );
+        // For tracking image loading errors
+        setImageError(productId, hasError = true) {
+            if (!productId) return;
             
-            if (idsToFetch.length === 0) return;
-            
-            try {
-                // If you implement a batch endpoint on your backend:
-                // const response = await api.get('/product/batch-images', {
-                //     params: { ids: idsToFetch.join(',') }
-                // });
-                // const urlMap = response.data;
-                
-                // For now, fetch URLs individually
-                await Promise.all(idsToFetch.map(id => this.fetchProductImageUrl(id)));
-            } catch (error) {
-                console.error('Failed to prefetch image URLs:', error);
-            }
+            if (!this.imageErrors) this.imageErrors = {};
+            this.imageErrors[productId] = hasError;
         },
         
-        // Reset image URL cache (useful when logging out or clearing data)
-        clearImageUrlCache() {
+        // Clear all image caches
+        clearImageCache() {
             this.imageUrlCache = {};
             this.imageUrlExpiration = {};
+            this.imageErrors = {};
         },
-        getProductImageUrl: (state) => (productId) => {
-            if (!productId) return null;
-            
-            const now = Date.now();
-            if (
-                state.imageUrlCache[productId] && 
-                (!state.imageUrlExpiration[productId] || state.imageUrlExpiration[productId] > now)
-            ) {
-                return state.imageUrlCache[productId];
-            }
-            return null;
-        }
     }
 })
 
