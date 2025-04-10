@@ -155,7 +155,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { cartStore } from "@/stores/data/CartData";
-import { productStore } from "@/stores/data/productData";
+import { productStore } from "@/stores/data/ProductData";
 import router from "@/router";
 
 const cartStoreInit = cartStore();
