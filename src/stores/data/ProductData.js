@@ -71,24 +71,37 @@ export const productStore = defineStore("productStore", {
         },
         async saveOrUpdateProduct(product, id, categoryId, avatarFile = null) {
             try {
-                let response = null;
-                const formData = new FormData();
-                
-                // Add the category ID if provided
-                if (categoryId) {
-                    formData.append("category", categoryId);
+                // Verify authentication before proceeding
+                const token = sessionStorage.getItem('jwt');
+                if (!token) {
+                    alert("You are not logged in. Please log in to continue.");
+                    router.push('/login');
+                    return null;
                 }
                 
-                // Add the avatar file if provided
+                // Create FormData
+                const formData = new FormData();
+                
+                // Add category ID if provided
+                if (categoryId) {
+                    formData.append("category", categoryId.toString());
+                }
+                
+                // Add avatar file if provided
                 if (avatarFile) {
                     formData.append("avatar", avatarFile);
                 }
                 
-                // Convert the product object to a JSON string and add it
-                formData.append("product", JSON.stringify(product));
+                // Create a clean product object
+                const cleanProduct = { ...product };
+                // Ensure we don't have nested category object
+                delete cleanProduct.category;
                 
-                // Improved condition to check for null, undefined, or non-numeric values
-                if (id === null || id === undefined || isNaN(id)) {
+                // Add the product data
+                formData.append("product", JSON.stringify(cleanProduct));
+                
+                let response;
+                if (id === null || id === undefined || isNaN(parseInt(id))) {
                     response = await api.post(`/admin/product/addProduct`, formData);
                 } else {
                     response = await api.post(`/admin/product/${id}`, formData);
@@ -97,9 +110,29 @@ export const productStore = defineStore("productStore", {
                 alert(`Save product: ${response.data.data.productName} successful`);
                 return response.data.data;
             } catch (error) {
+                // Don't show raw error to user
                 console.error("Error saving product:", error);
-                alert("Failed to save product. Please check your data and try again.");
-                throw error;
+                
+                if (error.response) {
+                    // Handle specific error cases
+                    switch (error.response.status) {
+                        case 400:
+                            alert("Invalid product data. Please check all fields and try again.");
+                            break;
+                        case 403:
+                            alert("You don't have permission to add or modify products.");
+                            break;
+                        case 413:
+                            alert("The image file is too large. Please use a smaller image.");
+                            break;
+                        default:
+                            alert("An error occurred while saving the product. Please try again later.");
+                    }
+                } else {
+                    alert("Unable to connect to the server. Please check your internet connection.");
+                }
+                
+                return null;
             }
         },
         async deleteProduct(id) {
