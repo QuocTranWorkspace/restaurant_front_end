@@ -82,7 +82,7 @@ export const authStore = defineStore("authStore", {
                     }
                 };
 
-                console.log(isTokenExpired)
+                console.log(isTokenExpired(token))
 
                 if (this.user['roles'][0] === 'ADMIN') {
                     router.push('/admin');
