@@ -43,3 +43,6 @@ Thumbs.db
 *.vi
 *.zip
 *~
+
+# Local Netlify folder
+.netlify
