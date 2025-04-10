@@ -73,11 +73,12 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { productStore } from "@/stores/data/ProductData";
 import AteriskField from "@/components/AteriskField.vue";
 
-const producStoreInit = productStore();
+// Correct variable naming
+const productStoreInit = productStore();
 
 const props = defineProps({
   id: String,
@@ -85,6 +86,7 @@ const props = defineProps({
 
 const imageFile = ref(null);
 
+// Initialize product with proper default values
 const product = ref({
   id: "",
   avatar: "",
@@ -92,23 +94,41 @@ const product = ref({
   originalPrice: "",
   salePrice: "",
   productDescription: "",
-  category: "Open this select menu",
+  category: null,
 });
 
 const categories = ref([]);
 
-producStoreInit.fetchCategories().then(() => {
-  categories.value = producStoreInit.getCategories;
-  product.value.category = JSON.stringify(fetchProductData);
+// Load categories on component mount
+onMounted(async () => {
+  await productStoreInit.fetchCategories();
+  categories.value = productStoreInit.getCategories;
+  
+  // If editing an existing product, fetch it
+  if (props.id && !isNaN(parseInt(props.id))) {
+    await fetchProductData(props.id);
+  }
 });
 
+// Function to fetch product data when editing
 const fetchProductData = async (productId) => {
   try {
-    const fetchedProduct = await producStoreInit.fetchProduct(parseInt(productId));
+    const fetchedProduct = await productStoreInit.fetchProduct(parseInt(productId));
 
     if (fetchedProduct) {
-      product.value = fetchedProduct;
-      product.value.category = JSON.stringify(fetchProductData);
+      // Set product values
+      product.value = {...fetchedProduct};
+      
+      // Find and set the matching category
+      if (fetchedProduct.category && fetchedProduct.category.id) {
+        const matchingCategory = categories.value.find(
+          cat => cat.id === fetchedProduct.category.id
+        );
+        
+        if (matchingCategory) {
+          product.value.category = JSON.stringify(matchingCategory);
+        }
+      }
     } else {
       console.warn("Product not found.");
     }
@@ -119,6 +139,8 @@ const fetchProductData = async (productId) => {
 
 const handleSubmit = async (event) => {
   event.preventDefault();
+  
+  // Validate all fields
   validateField("productName");
   validateField("originalPrice");
   validateField("salePrice");
@@ -126,30 +148,54 @@ const handleSubmit = async (event) => {
 
   const hasErrors = Object.values(errors.value).some((error) => error);
   if (!hasErrors) {
-    const formData = new FormData();
-    if (imageFile.value) {
-      formData.append("avatar", imageFile.value);
+    try {
+      // Extract categoryId from the selected category
+      let categoryId = null;
+      if (product.value.category) {
+        try {
+          const categoryObj = JSON.parse(product.value.category);
+          categoryId = categoryObj.id;
+        } catch (e) {
+          console.error("Error parsing category data:", e);
+          errors.value.category = "Invalid category format";
+          return;
+        }
+      }
+      
+      // Create a clean copy of the product for submission
+      const productForSubmission = {...product.value};
+      
+      // Remove the stringified category to prevent duplication
+      delete productForSubmission.category;
+      
+      // Call the updated method with separate parameters
+      await productStoreInit.saveOrUpdateProduct(
+        productForSubmission,
+        parseInt(props.id) || null,
+        categoryId,
+        imageFile.value
+      );
+      
+    } catch (error) {
+      console.error("Error submitting product:", error);
+      alert("An error occurred while saving the product. Please try again.");
     }
-
-    formData.append("category", JSON.parse(product.value.category).id);
-    product.value.category = null;
-    formData.append("product", JSON.stringify(product.value));
-
-    producStoreInit.saveOrUpdateProduct(formData, parseInt(props.id));
   } else {
-    console.warn("Form validation failed.", errors);
+    console.warn("Form validation failed.", errors.value);
   }
 };
 
-const errors = ref({});
+const errors = ref({
+  productName: "",
+  originalPrice: "",
+  salePrice: "",
+  category: "",
+  avatar: ""
+});
 
 const handleFileUpload = (event) => {
   imageFile.value = event.target.files[0];
-  if (!imageFile.value) {
-    errors.value.avatar = "Avatar is required.";
-  } else {
-    errors.value.avatar = "";
-  }
+  errors.value.avatar = ""; // Clear previous error
 };
 
 const validateField = (field) => {
@@ -160,12 +206,22 @@ const validateField = (field) => {
         : "Product Name is required.";
       break;
     case "originalPrice":
-      errors.value.originalPrice = product.value.originalPrice
-        ? ""
-        : "Original Price is required.";
+      if (!product.value.originalPrice) {
+        errors.value.originalPrice = "Original Price is required.";
+      } else if (isNaN(parseFloat(product.value.originalPrice))) {
+        errors.value.originalPrice = "Original Price must be a number.";
+      } else {
+        errors.value.originalPrice = "";
+      }
       break;
     case "salePrice":
-      errors.value.salePrice = product.value.salePrice ? "" : "Sale Price is required.";
+      if (!product.value.salePrice) {
+        errors.value.salePrice = "Sale Price is required.";
+      } else if (isNaN(parseFloat(product.value.salePrice))) {
+        errors.value.salePrice = "Sale Price must be a number.";
+      } else {
+        errors.value.salePrice = "";
+      }
       break;
     case "category":
       errors.value.category = product.value.category ? "" : "Category is required.";
@@ -175,15 +231,13 @@ const validateField = (field) => {
   }
 };
 
+// Watch for changes to the ID prop
 watch(
   () => props.id,
   (newId) => {
-    if (!isNaN(parseInt(newId)) && parseInt(newId) >= 0) {
+    if (newId && !isNaN(parseInt(newId))) {
       fetchProductData(newId);
-    } else {
-      console.warn("Invalid product ID.");
     }
-  },
-  { immediate: true }
+  }
 );
 </script>

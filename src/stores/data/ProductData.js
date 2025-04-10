@@ -69,18 +69,37 @@ export const productStore = defineStore("productStore", {
                 console.log(error);
             }
         },
-        async saveOrUpdateProduct(product, id) {
+        async saveOrUpdateProduct(product, id, categoryId, avatarFile = null) {
             try {
                 let response = null;
+                // Create a FormData object
+                const formData = new FormData();
+                
+                // Add the category ID if provided
+                if (categoryId) {
+                    formData.append("category", categoryId);
+                }
+                
+                // Add the avatar file if provided
+                if (avatarFile) {
+                    formData.append("avatar", avatarFile);
+                }
+                
+                // Convert the product object to a JSON string and add it
+                formData.append("product", JSON.stringify(product));
+                
                 if (isNaN(id)) {
-                    response = await api.post(`/admin/product/addProduct`, product);
+                    response = await api.post(`/admin/product/addProduct`, formData);
+                } else {
+                    response = await api.post(`/admin/product/${id}`, formData);
                 }
-                else {
-                    response = await api.post(`/admin/product/${id}`, product);
-                }
+                
                 alert(`Save product: ${response.data.data.productName} successful`);
+                return response.data.data;
             } catch (error) {
-                console.log(error);
+                console.error("Error saving product:", error);
+                alert("Failed to save product. Please check your data and try again.");
+                throw error;
             }
         },
         async deleteProduct(id) {
