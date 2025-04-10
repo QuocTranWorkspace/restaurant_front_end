@@ -1,45 +1,39 @@
-# Netlify configuration for Vue.js SPA
 [build]
   command = "npm run build"
-  functions = "netlify/functions"
   publish = "dist"
 
-# This redirect is ESSENTIAL for Single Page Applications like Vue.js
-# It ensures all routes return the index.html file so Vue Router can handle them
+# This redirect is ESSENTIAL for Single Page Applications
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Proper MIME type configuration for JavaScript files
+# Proper MIME types for Vite's output files
+[[headers]]
+  for = "/*"
+    [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+
+[[headers]]
+  for = "/assets/*"
+    [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
 [[headers]]
   for = "/*.js"
     [headers.values]
-    Content-Type = "application/javascript"
+    Content-Type = "application/javascript; charset=utf-8"
 
-# Configuration for ES Modules
 [[headers]]
-  for = "/*.mjs"
+  for = "/*.css"
     [headers.values]
-    Content-Type = "application/javascript"
+    Content-Type = "text/css; charset=utf-8"
 
-# Configuration for JSON files (including manifest)
 [[headers]]
   for = "/*.json"
     [headers.values]
-    Content-Type = "application/json"
-
-# Specific configuration for manifest file
-[[headers]]
-  for = "/manifest.json"
-    [headers.values]
-    Content-Type = "application/manifest+json"
-
-# Cache control for static assets to improve performance
-[[headers]]
-  for = "/static/*"
-    [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Content-Type = "application/json; charset=utf-8"
 
   ## (optional) Settings for Netlify Dev
   ## https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection
