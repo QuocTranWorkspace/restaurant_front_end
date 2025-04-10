@@ -84,6 +84,9 @@ export const authStore = defineStore("authStore", {
 
                 console.log(isTokenExpired(token))
 
+                console.log('Full URL:', `${import.meta.env.VITE_BASE_API_URL}/admin/product/addProduct`);
+                console.log('Token:', sessionStorage.getItem('jwt'));       
+
                 if (this.user['roles'][0] === 'ADMIN') {
                     router.push('/admin');
                 }
