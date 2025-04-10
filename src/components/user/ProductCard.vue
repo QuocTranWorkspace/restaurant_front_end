@@ -70,26 +70,17 @@ const props = defineProps({
 });
 
 // Image handling
-const imageLoaded = ref(false);
 const imageError = ref(false);
 const fallbackImageUrl = "https://via.placeholder.com/300x200?text=No+Image";
 
 const imageUrl = computed(() => {
-  if (!props.product || !props.product.id) return fallbackImageUrl;
-  
-  // Get URL from store or use fallback
-  const url = productStoreInit.getProductImageUrl(props.product.id);
-  return url || fallbackImageUrl;
+  return productStoreInit.getProductImageUrl(props.product.id);
 });
 
 // On component mount, fetch the image URL
 onMounted(async () => {
   if (props.product && props.product.id) {
-    try {
-      await productStoreInit.fetchProductImageUrl(props.product.id);
-    } catch (error) {
-      console.error("Error loading image URL:", error);
-    }
+    await productStoreInit.fetchProductImageUrl(props.product.id);
   }
 });
 

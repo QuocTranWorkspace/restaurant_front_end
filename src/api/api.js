@@ -32,15 +32,19 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Don't automatically clear credentials on every error!
-    
     if (!error.response) {
-      // Network error or request timeout
+      // Network error handling
       console.error('Network Error:', error.message);
       return Promise.reject(error);
     }
 
-    const { status, data } = error.response;
+    const { status, config } = error.response;
+    
+    // Don't redirect on 404 errors for image URLs
+    if (status === 404 && config.url.includes('/image')) {
+      // Just reject the promise without redirecting
+      return Promise.reject(error);
+    }
     
     // Handle different error statuses appropriately
     switch (status) {
@@ -70,7 +74,7 @@ api.interceptors.response.use(
         break;
         
       default:
-        console.error(`Error ${status}: ${data?.message || 'Unknown error'}`);
+        console.error(`Error ${status}: ${config?.message || 'Unknown error'}`);
     }
     
     return Promise.reject(error);

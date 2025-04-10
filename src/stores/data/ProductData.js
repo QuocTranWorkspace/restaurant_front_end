@@ -190,16 +190,13 @@ export const productStore = defineStore("productStore", {
             }
         },
         async fetchProductImageUrl(productId) {
-            // Add this temporary debugging code
-            console.log("Backend API URL:", import.meta.env.VITE_BASE_API_URL);
-            console.log("Product image endpoint being called:", `/product/1/image`);
-            // Crucial safety check - validate input before proceeding
+            // Validate input
             if (!productId) {
                 console.error('Invalid productId provided to fetchProductImageUrl');
                 return null;
             }
             
-            // Make sure these objects exist - this is critical
+            // Initialize cache if needed
             if (!this.imageUrlCache) this.imageUrlCache = {};
             if (!this.imageUrlExpiration) this.imageUrlExpiration = {};
             
@@ -213,27 +210,33 @@ export const productStore = defineStore("productStore", {
             }
             
             try {
+                // The endpoint is correct based on your backend code
                 const response = await api.get(`/product/${productId}/image`);
                 
-                // Validate response
-                if (!response || !response.data || !response.data.url) {
-                    console.error(`Invalid response structure for product ${productId}`);
-                    return null;
-                }
-                
+                // If we reach here, the request was successful
+                // Extract the URL from the response
                 const imageUrl = response.data.url;
                 
-                // Safely store in cache
-                if (!this.imageUrlCache) this.imageUrlCache = {};
+                // Store in cache
                 this.imageUrlCache[productId] = imageUrl;
-                
-                // Safely set expiration
-                if (!this.imageUrlExpiration) this.imageUrlExpiration = {};
-                this.imageUrlExpiration[productId] = now + (60 * 60 * 1000);
+                this.imageUrlExpiration[productId] = now + (60 * 60 * 1000); // 1 hour
                 
                 return imageUrl;
             } catch (error) {
-                console.error(`Failed to fetch image URL for product ${productId}:`, error);
+                // Check specifically for 404 errors - this is EXPECTED for products without images
+                if (error.response && error.response.status === 404) {
+                    // Don't log this as an error - it's normal behavior
+                    console.log(`Product ${productId} has no image - using fallback`);
+                    
+                    // Cache the "no image" result to avoid repeated requests
+                    this.imageUrlCache[productId] = null;
+                    this.imageUrlExpiration[productId] = now + (60 * 60 * 1000); // 1 hour
+                    
+                    return null;
+                }
+                
+                // For other errors, log them normally
+                console.error(`Error fetching image URL for product ${productId}:`, error);
                 return null;
             }
         },
