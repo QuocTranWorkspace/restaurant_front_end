@@ -72,7 +72,6 @@ export const productStore = defineStore("productStore", {
         async saveOrUpdateProduct(product, id, categoryId, avatarFile = null) {
             try {
                 let response = null;
-                // Create a FormData object
                 const formData = new FormData();
                 
                 // Add the category ID if provided
@@ -88,7 +87,8 @@ export const productStore = defineStore("productStore", {
                 // Convert the product object to a JSON string and add it
                 formData.append("product", JSON.stringify(product));
                 
-                if (isNaN(id)) {
+                // Improved condition to check for null, undefined, or non-numeric values
+                if (id === null || id === undefined || isNaN(id)) {
                     response = await api.post(`/admin/product/addProduct`, formData);
                 } else {
                     response = await api.post(`/admin/product/${id}`, formData);

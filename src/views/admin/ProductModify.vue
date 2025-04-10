@@ -168,13 +168,15 @@ const handleSubmit = async (event) => {
       // Remove the stringified category to prevent duplication
       delete productForSubmission.category;
       
-      // Call the updated method with separate parameters
-      await productStoreInit.saveOrUpdateProduct(
+      // In your handleSubmit function:
+    const productId = props.id && !isNaN(parseInt(props.id)) ? parseInt(props.id) : null;
+
+    await productStoreInit.saveOrUpdateProduct(
         productForSubmission,
-        parseInt(props.id) || null,
+        productId,
         categoryId,
         imageFile.value
-      );
+    );
       
     } catch (error) {
       console.error("Error submitting product:", error);
