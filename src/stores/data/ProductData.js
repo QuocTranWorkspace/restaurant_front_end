@@ -176,6 +176,18 @@ export const productStore = defineStore("productStore", {
         clearImageUrlCache() {
             this.imageUrlCache = {};
             this.imageUrlExpiration = {};
+        },
+        getProductImageUrl: (state) => (productId) => {
+            if (!productId) return null;
+            
+            const now = Date.now();
+            if (
+                state.imageUrlCache[productId] && 
+                (!state.imageUrlExpiration[productId] || state.imageUrlExpiration[productId] > now)
+            ) {
+                return state.imageUrlCache[productId];
+            }
+            return null;
         }
     }
 })
