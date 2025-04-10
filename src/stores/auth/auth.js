@@ -11,43 +11,7 @@ export const authStore = defineStore("authStore", {
     getters: {
         isAuthenticated: (state) => !!state.user,
         isAdmin: () => JSON.parse(sessionStorage.getItem('user'))?.roles.includes('ADMIN') || JSON.parse(sessionStorage.getItem('user'))?.roles.includes('STAFF'),
-        getUser: (state) => state.user,
-        // Add to your auth store or utilities
-        isTokenExpired = (token) => {
-            if (!token) return true;
-            
-            try {
-            // Extract payload from JWT
-            const base64Url = token.split('.')[1];
-            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-            const payload = JSON.parse(window.atob(base64));
-            
-            // Check expiration (exp is in seconds, convert to milliseconds)
-            return payload.exp * 1000 < Date.now();
-            } catch (e) {
-            console.error("Error parsing JWT token:", e);
-            return true; // If we can't parse it, consider it expired
-            }
-        },
-        checkTokenValidity: () => {
-            const token1 = sessionStorage.getItem('jwt');
-            
-            if (!token || isTokenExpired(token1)) {
-              console.warn("Authentication token expired. Redirecting to login...");
-              
-              // Clear expired auth data
-              this.user = null;
-              this.token = null;
-              sessionStorage.removeItem('jwt');
-              sessionStorage.removeItem('user');
-              
-              // Redirect to login
-              router.push('/login');
-              return false;
-            }
-            
-            return true;
-          }
+        getUser: (state) => state.user
     },
 
     actions: {
@@ -98,7 +62,25 @@ export const authStore = defineStore("authStore", {
                         
                 const userResponse = await api.get(`/auth/userAuthenticated`);
                 const user = userResponse.data;
-                this.setUser(user);
+                this.setUser(user); 
+
+                // Add to your auth store or utilities
+                const isTokenExpired = (token) => {
+                    if (!token) return true;
+                    
+                    try {
+                    // Extract payload from JWT
+                    const base64Url = token.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const payload = JSON.parse(window.atob(base64));
+                    
+                    // Check expiration (exp is in seconds, convert to milliseconds)
+                    return payload.exp * 1000 < Date.now();
+                    } catch (e) {
+                    console.error("Error parsing JWT token:", e);
+                    return true; // If we can't parse it, consider it expired
+                    }
+                };
 
                 console.log(isTokenExpired(token))
 
