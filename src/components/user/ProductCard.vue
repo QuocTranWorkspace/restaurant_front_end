@@ -1,6 +1,11 @@
 <template>
   <CCard class="product-card card mt-3 mb-3 h-100">
-    <CCardImage class="card-img-top img-fluid" orientation="top" :src="avatarSrc" />
+    <CCardImage 
+      class="card-img-top img-fluid" 
+      orientation="top" 
+      :src="imageUrl || fallbackImageUrl" 
+      @error="handleImageError"
+    />
     <CCardBody class="card-body d-flex flex-column">
       <CCardTitle class="card-title">{{ product.productName }}</CCardTitle>
       <CCardText class="card-text flex-grow-1">
@@ -52,20 +57,44 @@
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { cartStore } from "@/stores/data/CartData";
+import { productStore } from "@/stores/data/ProductData"; // Import your product store
 import router from "@/router";
 
 const cartStoreInit = cartStore();
-
+const productStoreInit = productStore(); // Initialize your product store
 const successModal = ref(false);
 const props = defineProps({
   product: null,
 });
 
-const avatarSrc = computed(
-  () => `${import.meta.env.VITE_BASE_IMG_URL}${props.product.avatar}`
-);
+// Image handling
+const imageLoaded = ref(false);
+const imageError = ref(false);
+const fallbackImageUrl = "https://via.placeholder.com/300x200?text=No+Image";
+
+// Computed property for the image URL
+const imageUrl = computed(() => {
+  if (imageError.value) return fallbackImageUrl;
+  return productStoreInit.getProductImageUrl(props.product.id) || '';
+});
+
+// Load the image URL when the component mounts
+onMounted(async () => {
+  if (props.product && props.product.id) {
+    try {
+      await productStoreInit.fetchProductImageUrl(props.product.id);
+    } catch (error) {
+      console.error("Error loading image URL:", error);
+    }
+  }
+});
+
+// Handle image loading errors
+const handleImageError = () => {
+  imageError.value = true;
+};
 
 const formatCurrency = (value) => {
   if (typeof value !== "number") {

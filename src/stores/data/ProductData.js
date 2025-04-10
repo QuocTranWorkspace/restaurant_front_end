@@ -112,6 +112,63 @@ export const productStore = defineStore("productStore", {
                 console.log(error);
             }
         },
+        async fetchProductImageUrl(productId) {
+            // Check if we already have a valid URL in cache
+            const now = Date.now();
+            if (
+                this.imageUrlCache[productId] && 
+                (!this.imageUrlExpiration[productId] || this.imageUrlExpiration[productId] > now)
+            ) {
+                return this.imageUrlCache[productId];
+            }
+            
+            try {
+                const response = await api.get(`/product/${productId}/image`);
+                const imageUrl = response.data.url;
+                
+                // Store in cache
+                this.imageUrlCache[productId] = imageUrl;
+                
+                // Set expiration time (e.g., 1 hour from now)
+                // Adjust this based on your Backblaze B2 pre-signed URL expiration setting
+                this.imageUrlExpiration[productId] = now + (60 * 60 * 1000);
+                
+                return imageUrl;
+            } catch (error) {
+                console.error(`Failed to fetch image URL for product ${productId}:`, error);
+                return null;
+            }
+        },
+        
+        // Add a method to prefetch multiple image URLs at once
+        async prefetchProductImageUrls(productIds) {
+            const now = Date.now();
+            const idsToFetch = productIds.filter(id => 
+                !this.imageUrlCache[id] || 
+                (this.imageUrlExpiration[id] && this.imageUrlExpiration[id] <= now)
+            );
+            
+            if (idsToFetch.length === 0) return;
+            
+            try {
+                // If you implement a batch endpoint on your backend:
+                // const response = await api.get('/product/batch-images', {
+                //     params: { ids: idsToFetch.join(',') }
+                // });
+                // const urlMap = response.data;
+                
+                // For now, fetch URLs individually
+                await Promise.all(idsToFetch.map(id => this.fetchProductImageUrl(id)));
+            } catch (error) {
+                console.error('Failed to prefetch image URLs:', error);
+            }
+        },
+        
+        // Reset image URL cache (useful when logging out or clearing data)
+        clearImageUrlCache() {
+            this.imageUrlCache = {};
+            this.imageUrlExpiration = {};
+        }
     }
 })
 

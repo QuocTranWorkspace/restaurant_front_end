@@ -86,9 +86,10 @@
             <div class="d-flex">
               <div>
                 <img
-                  :src="image(item.avatar)"
+                  :src="getProductImageUrl(item)"
                   alt=""
                   style="max-width: 60px; max-height: 60px"
+                  @error="handleImageError($event, item.id)"
                 />
               </div>
               <div>
@@ -153,19 +154,70 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { cartStore } from "@/stores/data/CartData";
 import { productStore } from "@/stores/data/ProductData";
+import api from "@/api/api";
 import router from "@/router";
 
 const cartStoreInit = cartStore();
 const productStoreInit = productStore();
 
 const confirmModal = ref(false);
-
 const user = ref(JSON.parse(sessionStorage.getItem("user")));
-
 const cartItems = ref([]);
+
+// Track image errors by product ID
+const imageErrors = ref({});
+const fallbackImageUrl = "https://via.placeholder.com/60x60?text=No+Image";
+
+// Image URL cache to avoid repeated API calls
+const imageUrlCache = ref({});
+
+// Get image URL for a product in the cart
+const getProductImageUrl = (item) => {
+  // If we've previously had an error for this image, use fallback
+  if (imageErrors.value[item.id]) {
+    return fallbackImageUrl;
+  }
+  
+  // If we already have the URL cached, use it
+  if (imageUrlCache.value[item.id]) {
+    return imageUrlCache.value[item.id];
+  }
+  
+  // If no avatar, use fallback
+  if (!item.avatar) {
+    return fallbackImageUrl;
+  }
+  
+  // Try to fetch the image URL asynchronously 
+  fetchImageUrl(item.id);
+  
+  // Return a temporary loading placeholder while fetching
+  return fallbackImageUrl;
+};
+
+// Fetch image URL from backend
+const fetchImageUrl = async (productId) => {
+  if (!productId || imageUrlCache.value[productId]) return;
+  
+  try {
+    const response = await api.get(`/product/${productId}/image`);
+    imageUrlCache.value[productId] = response.data.url;
+    // Force a component update
+    cartItems.value = [...cartItems.value];
+  } catch (error) {
+    console.error(`Failed to load image for product ${productId}:`, error);
+    imageErrors.value[productId] = true;
+  }
+};
+
+// Handle image loading errors
+const handleImageError = (event, productId) => {
+  event.target.src = fallbackImageUrl;
+  imageErrors.value[productId] = true;
+};
 
 const loadCartItems = async () => {
   const cart = cartStoreInit.getCart;
@@ -178,10 +230,19 @@ const loadCartItems = async () => {
     );
 
     cartItems.value = await Promise.all(productPromises);
+    
+    // Prefetch all image URLs for cart items
+    cartItems.value.forEach(item => {
+      if (item.id && item.avatar) {
+        fetchImageUrl(item.id);
+      }
+    });
   }
 };
 
-loadCartItems();
+onMounted(() => {
+  loadCartItems();
+});
 
 const formatCurrency = (value) => {
   if (typeof value !== "number") {
@@ -195,10 +256,6 @@ const formatCurrency = (value) => {
 const total = computed(() =>
   cartItems.value.reduce((acc, item) => acc + item.salePrice * item.quantity, 0)
 );
-
-const image = (imagePath) => {
-  return import.meta.env.VITE_BASE_IMG_URL + imagePath;
-};
 
 const updateQuantity = (id, quantity) => {
   cartStoreInit.updateQuantity(id, quantity);
@@ -228,7 +285,7 @@ const submitCheckout = (event) => {
       sessionStorage.removeItem("cart");
     }
   } catch (error) {
-    console.error("Error uploading product:", error);
+    console.error("Error processing checkout:", error);
   }
 };
 
